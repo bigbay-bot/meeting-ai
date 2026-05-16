@@ -1,0 +1,39 @@
+@use './variables.scss' as *;
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == sm {
+    @media (max-width: #{$bp-sm - 1px}) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (max-width: #{$bp-md - 1px}) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (max-width: #{$bp-lg - 1px}) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (max-width: #{$bp-xl - 1px}) {
+      @content;
+    }
+  } @else if $breakpoint == min-md {
+    @media (min-width: #{$bp-md}) {
+      @content;
+    }
+  } @else if $breakpoint == min-lg {
+    @media (min-width: #{$bp-lg}) {
+      @content;
+    }
+  } @else if $breakpoint == min-xl {
+    @media (min-width: #{$bp-xl}) {
+      @content;
+    }
+  }
+}
+
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

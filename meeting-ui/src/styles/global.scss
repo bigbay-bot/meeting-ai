@@ -1,0 +1,297 @@
+@use './variables.scss' as *;
+@use './mixins.scss' as *;
+
+:root {
+  --el-color-primary: #{$primary-color};
+  --el-color-primary-light-3: #60a5fa;
+  --el-color-primary-light-5: #93c5fd;
+  --el-color-primary-light-7: #bfdbfe;
+  --el-color-primary-light-8: #{$primary-light};
+  --el-color-primary-light-9: #f5f8ff;
+  --el-color-primary-dark-2: #{$primary-hover};
+  --el-color-success: #{$success-color};
+  --el-color-warning: #{$warning-color};
+  --el-color-danger: #{$danger-color};
+  --el-font-family: #{$font-family};
+  --el-font-size-base: #{$font-size-base};
+  --el-text-color-primary: #{$text-primary};
+  --el-text-color-regular: #{$text-regular};
+  --el-text-color-secondary: #{$text-secondary};
+  --el-text-color-placeholder: #{$text-placeholder};
+  --el-border-color: #{$border-color};
+  --el-border-radius-base: #{$radius-md};
+}
+
+html {
+  font-size: 14px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: $font-family;
+  font-size: $font-size-base;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-base;
+  color: $text-regular;
+  background: $bg-base;
+  -webkit-font-smoothing: antialiased;
+}
+
+// —— 排版 §5 ——
+h1,
+.h1 {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  color: $text-primary;
+}
+
+h2,
+.h2 {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+  color: $text-primary;
+}
+
+h3,
+.h3 {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+  color: $text-primary;
+}
+
+// —— 容器 §3.2 ——
+.ds-container,
+.page-container {
+  width: 100%;
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: $space-5 $space-4;
+
+  @include respond-to(sm) {
+    padding: $space-4 $space-3;
+  }
+}
+
+// —— 卡片 §3.3 ——
+.ds-card {
+  background: $bg-card;
+  border-radius: $radius-lg;
+  padding: $space-4;
+  box-shadow: $shadow-card;
+  transition: $transition-base;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &--flat:hover {
+    transform: none;
+  }
+
+  &--pad-lg {
+    padding: $space-5;
+  }
+}
+
+// —— 按钮 §6.1 ——
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: $radius-md;
+  border: none;
+  font-family: $font-family;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+  cursor: pointer;
+  transition: $transition-base;
+  white-space: nowrap;
+
+  @media (min-width: $bp-md) {
+    min-height: 40px;
+  }
+
+  &--primary {
+    background: $primary-color;
+    color: #fff;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+
+  &--secondary {
+    background: $bg-secondary;
+    color: $text-primary;
+
+    &:hover {
+      background: #d1d5db;
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $text-primary;
+    border: 1px solid $border-color;
+
+    &:hover {
+      border-color: $primary-color;
+      color: $primary-color;
+    }
+  }
+
+  &--sm {
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: $font-size-sm;
+  }
+
+  &--icon {
+    width: 44px;
+    min-width: 44px;
+    padding: 0;
+
+    @media (min-width: $bp-md) {
+      width: 40px;
+      min-width: 40px;
+    }
+  }
+}
+
+// —— 输入框 §6.2 ——
+.ds-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  background: $bg-white;
+  font-family: $font-family;
+  font-size: $font-size-base;
+  color: $text-primary;
+  outline: none;
+  transition: $transition-base;
+
+  @media (min-width: $bp-md) {
+    min-height: 40px;
+  }
+
+  &::placeholder {
+    color: $text-disabled;
+  }
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+}
+
+.ds-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  min-height: 44px;
+  padding: 0 $space-3;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  background: $bg-white;
+  transition: $transition-base;
+
+  @media (min-width: $bp-md) {
+    min-height: 40px;
+  }
+
+  &:focus-within {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+
+  .ds-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    padding: 0;
+    min-height: auto;
+    box-shadow: none;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+// —— 标签 §6.3 ——
+.ds-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-tight;
+  background: $primary-light;
+  color: $primary-color;
+
+  &--success {
+    background: #d1fae5;
+    color: $success-color;
+  }
+
+  &--warning {
+    background: #fef3c7;
+    color: $warning-color;
+  }
+
+  &--neutral {
+    background: $border-light;
+    color: $text-secondary;
+  }
+}
+
+// —— 文字工具 ——
+.text-primary {
+  color: $text-primary;
+}
+.text-secondary {
+  color: $text-secondary;
+}
+.text-small {
+  font-size: $font-size-xs;
+  line-height: $line-height-base;
+}
+
+// Element Plus 覆盖
+.el-button--primary {
+  --el-button-bg-color: #{$primary-color};
+  --el-button-border-color: #{$primary-color};
+  --el-button-hover-bg-color: #{$primary-hover};
+  --el-button-hover-border-color: #{$primary-hover};
+  border-radius: $radius-md;
+}
+
+.el-input__wrapper,
+.el-select__wrapper {
+  border-radius: $radius-md !important;
+  box-shadow: 0 0 0 1px $border-color inset !important;
+  transition: $transition-base;
+
+  &.is-focus {
+    box-shadow: 0 0 0 1px $primary-color inset !important;
+  }
+}
+
+.el-tabs__item.is-active {
+  color: $primary-color;
+  font-weight: $font-weight-semibold;
+}
+
+.el-tabs__active-bar {
+  background-color: $primary-color;
+}

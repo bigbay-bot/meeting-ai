@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { Plus } from '@element-plus/icons-vue'
+import { Plus, ArrowLeft } from '@element-plus/icons-vue'
 
 const router = useRouter()
 
@@ -46,28 +46,34 @@ const handleCancel = () => {
 </script>
 
 <template>
-  <div class="meeting-create">
-    <el-page-header @back="router.push('/meetings')" title="新建会议" />
+  <div class="meeting-create page-container">
+    <div class="page-header">
+      <el-button text class="back-btn" @click="router.push('/meetings')">
+        <el-icon :size="18"><ArrowLeft /></el-icon>
+        返回
+      </el-button>
+      <h1 class="page-title">新建会议</h1>
+    </div>
 
-    <el-card class="form-card" shadow="never">
+    <div class="form-card ds-card">
       <el-form
         ref="formRef"
         :model="form"
         :rules="rules"
         label-width="100px"
-        style="max-width: 800px"
+        class="create-form"
       >
         <el-form-item label="会议标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入会议标题" />
+          <el-input v-model="form.title" placeholder="请输入会议标题" size="large" />
         </el-form-item>
 
         <el-form-item label="会议类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择会议类型" style="width: 100%">
+          <el-select v-model="form.type" placeholder="请选择会议类型" size="large">
             <el-option
-              v-for="type in meetingTypes"
-              :key="type.value"
-              :label="type.label"
-              :value="type.value"
+              v-for="t in meetingTypes"
+              :key="t.value"
+              :label="t.label"
+              :value="t.value"
             />
           </el-select>
         </el-form-item>
@@ -77,17 +83,23 @@ const handleCancel = () => {
             v-model="form.time"
             type="datetime"
             placeholder="选择日期时间"
-            style="width: 100%"
+            size="large"
           />
         </el-form-item>
 
         <el-form-item label="预计时长">
-          <el-slider v-model="form.duration" :min="15" :max="240" :step="15" show-stops />
-          <span class="duration-text">{{ form.duration }} 分钟</span>
+          <div class="duration-row">
+            <el-slider v-model="form.duration" :min="15" :max="240" :step="15" show-stops />
+            <span class="duration-text">{{ form.duration }} 分钟</span>
+          </div>
         </el-form-item>
 
         <el-form-item label="会议地点">
-          <el-input v-model="form.location" placeholder="请输入会议地点或线上会议链接" />
+          <el-input
+            v-model="form.location"
+            placeholder="请输入会议地点或线上会议链接"
+            size="large"
+          />
         </el-form-item>
 
         <el-form-item label="参会人员">
@@ -95,7 +107,7 @@ const handleCancel = () => {
             v-model="form.participants"
             multiple
             placeholder="请选择参会人员"
-            style="width: 100%"
+            size="large"
           >
             <el-option
               v-for="p in participantOptions"
@@ -120,36 +132,132 @@ const handleCancel = () => {
             action="#"
             :auto-upload="false"
             drag
-            style="width: 100%"
+            class="upload-area"
           >
             <el-icon :size="40"><Plus /></el-icon>
-            <div class="el-upload__text">
+            <div class="upload-text">
               拖拽文件到此处或 <em>点击上传</em>
             </div>
             <template #tip>
-              <div class="el-upload__tip">支持上传会议相关的文档、PPT等</div>
+              <div class="upload-tip">支持上传会议相关的文档、PPT等</div>
             </template>
           </el-upload>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="handleSubmit">创建会议</el-button>
-          <el-button @click="handleCancel">取消</el-button>
+          <div class="form-actions">
+            <el-button type="primary" size="large" @click="handleSubmit">
+              创建会议
+            </el-button>
+            <el-button size="large" @click="handleCancel">取消</el-button>
+          </div>
         </el-form-item>
       </el-form>
-    </el-card>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.meeting-create {
-  .form-card {
-    margin-top: 20px;
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  margin-bottom: $space-5;
 
-    .duration-text {
-      margin-left: 12px;
-      color: #666;
+  .back-btn {
+    padding: 0;
+    height: auto;
+    font-size: $font-size-base;
+    color: $text-secondary;
+
+    &:hover {
+      color: $primary-color;
     }
   }
+
+  .page-title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    margin: 0;
+  }
+}
+
+.form-card {
+  max-width: 720px;
+  padding: $space-5;
+
+  @include respond-to(sm) {
+    padding: $space-4;
+  }
+}
+
+.create-form {
+  :deep(.el-form-item__label) {
+    font-weight: $font-weight-medium;
+    color: $text-primary;
+  }
+
+  :deep(.el-input__wrapper),
+  :deep(.el-select__wrapper),
+  :deep(.el-textarea__inner) {
+    border-radius: $radius-md;
+  }
+}
+
+.duration-row {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+
+  .el-slider {
+    flex: 1;
+  }
+
+  .duration-text {
+    font-size: $font-size-base;
+    color: $text-secondary;
+    font-weight: $font-weight-medium;
+    white-space: nowrap;
+    min-width: 64px;
+  }
+}
+
+.upload-area {
+  :deep(.el-upload-dragger) {
+    border-radius: $radius-lg;
+    border-color: $border-color;
+    background: $bg-hover;
+    padding: $space-5;
+    transition: $transition-base;
+
+    &:hover {
+      border-color: $primary-color;
+    }
+  }
+
+  .upload-text {
+    margin-top: $space-2;
+    font-size: $font-size-base;
+    color: $text-secondary;
+
+    em {
+      color: $primary-color;
+      font-style: normal;
+      font-weight: $font-weight-medium;
+    }
+  }
+
+  .upload-tip {
+    margin-top: $space-2;
+    font-size: $font-size-xs;
+    color: $text-disabled;
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: $space-3;
+  padding-top: $space-2;
 }
 </style>

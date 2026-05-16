@@ -17,7 +17,7 @@ const routes: RouteRecordRaw[] = [
         path: 'meetings',
         name: 'MeetingList',
         component: () => import('@/views/meeting/MeetingList.vue'),
-        meta: { title: '会议列表', icon: 'DocumentCopy' }
+        meta: { title: '历史会议', icon: 'DocumentCopy' }
       },
       {
         path: 'meetings/:id',
@@ -35,13 +35,13 @@ const routes: RouteRecordRaw[] = [
         path: 'statistics',
         name: 'Statistics',
         component: () => import('@/views/statistics/Index.vue'),
-        meta: { title: '数据统计', icon: 'TrendCharts' }
+        meta: { title: '数据看板', icon: 'TrendCharts' }
       },
       {
         path: 'settings',
         name: 'Settings',
         component: () => import('@/views/settings/Index.vue'),
-        meta: { title: '系统设置', icon: 'Setting' }
+        meta: { title: '设置中心', icon: 'Setting' }
       }
     ]
   },
@@ -59,7 +59,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  document.title = to.meta.title ? `${to.meta.title} - 会议纪要AI` : '会议纪要AI'
+  document.title = to.meta.title ? `${to.meta.title} - 智会纪要` : '智会纪要'
 })
 
 export default router

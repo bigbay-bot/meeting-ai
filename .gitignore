@@ -1,5 +1,6 @@
 .idea/
 *.iml
+.vscode/
 
 # OS files
 .DS_Store
@@ -7,3 +8,14 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+target/
+
+# Auto-generated
+coverage/
+
