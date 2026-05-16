@@ -1,0 +1,34 @@
+package com.meeting.ai.exception;
+
+import com.meeting.ai.enums.ErrorCode;
+import com.meeting.ai.utils.Result;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@Slf4j
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(BusinessException.class)
+    public Result<Void> handleBusinessException(BusinessException e) {
+        log.warn("业务异常: {}", e.getMessage());
+        return Result.fail(e.getErrorCode().getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(BindException.class)
+    public Result<Void> handleValidationException(BindException e) {
+        String message = e.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .findFirst()
+                .orElse("参数校验失败");
+        return Result.fail(ErrorCode.BAD_REQUEST.getCode(), message);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public Result<Void> handleException(Exception e) {
+        log.error("系统异常", e);
+        return Result.fail(ErrorCode.INTERNAL_ERROR.getCode(), "系统繁忙，请稍后重试");
+    }
+}
