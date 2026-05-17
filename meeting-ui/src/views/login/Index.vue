@@ -96,6 +96,18 @@ const goToRegister = () => {
             </el-button>
           </el-form-item>
         </el-form>
+
+        <div class="demo-accounts">
+          <p class="demo-title">测试账号</p>
+          <div class="demo-row" @click="form.username = 'admin'; form.password = 'admin123'">
+            <span class="demo-label">管理员</span>
+            <span class="demo-value">admin / admin123</span>
+          </div>
+          <div class="demo-row" @click="form.username = 'zhangxiaoming'; form.password = 'admin123'">
+            <span class="demo-label">普通用户</span>
+            <span class="demo-value">zhangxiaoming / admin123</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -203,6 +215,47 @@ const goToRegister = () => {
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    .demo-accounts {
+      margin-top: $space-6;
+      padding-top: $space-5;
+      border-top: 1px solid $border-light;
+
+      .demo-title {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        margin: 0 0 $space-3;
+        text-align: center;
+      }
+
+      .demo-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: $space-3 $space-4;
+        margin-bottom: $space-2;
+        background: $bg-hover;
+        border-radius: $radius-md;
+        cursor: pointer;
+        transition: $transition-base;
+
+        &:hover {
+          background: $primary-light;
+        }
+
+        .demo-label {
+          font-size: $font-size-sm;
+          color: $text-secondary;
+        }
+
+        .demo-value {
+          font-size: $font-size-sm;
+          font-weight: $font-weight-medium;
+          color: $primary-color;
+          font-family: $font-family-num;
+        }
+      }
     }
   }
 }
