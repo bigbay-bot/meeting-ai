@@ -8,6 +8,7 @@ public class MeetingListRequest {
     private Integer size = 10;
     private String keyword;
     private String status;
+    private String type;
     private String startTime;
     private String endTime;
 }

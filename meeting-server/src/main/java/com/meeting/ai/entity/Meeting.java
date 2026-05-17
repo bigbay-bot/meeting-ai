@@ -4,34 +4,51 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
-@TableName("meeting_record")
+@TableName("meeting")
 public class Meeting {
+
     @TableId(type = IdType.AUTO)
     private Long id;
 
     private String title;
+
+    private Long organizerId;
+
     private String type;
-    private LocalDateTime time;
-    private Integer duration;
-    private String location;
-    private String participants;
-    private String description;
+
     private String status;
 
+    private Integer progressPercent;
+
+    private LocalDateTime startTime;
+
+    private LocalDateTime endTime;
+
+    private String duration;
+
+    private String location;
+
+    private String description;
+
+    private String tags;
+
+    private Integer isStarred;
+
+    private String aiProcessingStatus;
+
+    private Integer estimatedRemainingTime;
+
+    private Long createdBy;
+
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
+    private LocalDateTime createdAt;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
+    private LocalDateTime updatedAt;
 
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
     private Integer deleted;
-
-    @Version
-    @TableField(fill = FieldFill.INSERT)
-    private Integer version;
 }
