@@ -83,11 +83,11 @@ const handleLogin = async () => {
 
 .login-left {
   flex: 1;
-  background: linear-gradient(135deg, #4d7cfe 0%, #6b93ff 50%, #8bafff 100%);
+  background: $primary-color;
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 48px;
+  padding: $space-7;
 
   @include respond-to(min-lg) {
     display: flex;
@@ -100,7 +100,7 @@ const handleLogin = async () => {
     .brand-logo {
       width: 52px;
       height: 52px;
-      margin-bottom: 22px;
+      margin-bottom: $space-5;
 
       svg {
         width: 100%;
@@ -109,9 +109,9 @@ const handleLogin = async () => {
     }
 
     h1 {
-      font-size: 32px;
+      font-size: $font-size-2xl;
       font-weight: $font-weight-semibold;
-      margin: 0 0 12px;
+      margin: 0 0 $space-3;
       line-height: $line-height-tight;
       letter-spacing: -0.02em;
     }
@@ -119,7 +119,7 @@ const handleLogin = async () => {
     p {
       font-size: $font-size-lg;
       opacity: 0.92;
-      margin: 0 0 28px;
+      margin: 0 0 $space-6;
       line-height: $line-height-base;
     }
 
@@ -131,8 +131,8 @@ const handleLogin = async () => {
       li {
         font-size: $font-size-base;
         opacity: 0.88;
-        padding: 8px 0;
-        padding-left: 20px;
+        padding: $space-2 0;
+        padding-left: $space-5;
         position: relative;
         line-height: $line-height-base;
 
@@ -151,8 +151,8 @@ const handleLogin = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  padding: 24px;
+  background: $bg-white;
+  padding: $space-5;
 
   .login-box {
     width: 100%;
@@ -162,14 +162,14 @@ const handleLogin = async () => {
       font-size: $font-size-2xl;
       font-weight: $font-weight-semibold;
       color: $text-title;
-      margin: 0 0 8px;
+      margin: 0 0 $space-2;
       line-height: $line-height-tight;
     }
 
     .login-sub {
       font-size: $font-size-base;
       color: $text-secondary;
-      margin: 0 0 28px;
+      margin: 0 0 $space-6;
       line-height: $line-height-base;
     }
 

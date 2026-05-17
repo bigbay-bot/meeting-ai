@@ -71,7 +71,7 @@ const handleReset = () => {
             <div
               v-for="tpl in templates"
               :key="tpl.id"
-              class="template-card page-card"
+              class="template-card ds-card"
               :class="{ active: tpl.active }"
             >
               <div class="tpl-header">
@@ -91,7 +91,7 @@ const handleReset = () => {
 
         <div class="module-section">
           <h3>首页功能模块设置</h3>
-          <div class="module-list page-card">
+          <div class="module-list ds-card">
             <div v-for="mod in modules" :key="mod.name" class="module-item">
               <el-icon class="drag-handle"><Rank /></el-icon>
               <span class="module-name">{{ mod.name }}</span>
@@ -107,19 +107,19 @@ const handleReset = () => {
       </el-tab-pane>
 
       <el-tab-pane label="功能模块" name="modules">
-        <div class="empty-tab page-card">
+        <div class="empty-tab ds-card">
           <p>功能模块配置开发中...</p>
         </div>
       </el-tab-pane>
 
       <el-tab-pane label="成员管理" name="members">
-        <div class="empty-tab page-card">
+        <div class="empty-tab ds-card">
           <p>成员管理功能开发中...</p>
         </div>
       </el-tab-pane>
 
       <el-tab-pane label="集成设置" name="integration">
-        <div class="empty-tab page-card">
+        <div class="empty-tab ds-card">
           <p>第三方集成配置开发中...</p>
         </div>
       </el-tab-pane>
@@ -276,5 +276,15 @@ const handleReset = () => {
   text-align: center;
   color: $text-secondary;
   font-size: 14px;
+}
+
+.settings-page.page-container {
+  max-width: 80% !important;
+  margin: 0 auto;
+  width: 100%;
+
+  @media (max-width: #{$bp-md - 1px}) {
+    max-width: 100% !important;
+  }
 }
 </style>

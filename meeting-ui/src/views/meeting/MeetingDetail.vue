@@ -237,7 +237,7 @@ const getStatusLabel = (status: string) => {
 .participant-tag {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  padding: $space-1 $space-3;
   border-radius: $radius-md;
   background: $primary-light;
   color: $primary-color;

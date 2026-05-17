@@ -44,7 +44,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 
     <!-- 指标卡片 -->
     <div class="stats-grid">
-      <div v-for="item in statsOverview" :key="item.label" class="stat-card page-card">
+      <div v-for="item in statsOverview" :key="item.label" class="stat-card ds-card">
         <div class="stat-icon" :style="{ background: item.bg, color: item.color }">
           <el-icon :size="22"><component :is="item.icon" /></el-icon>
         </div>
@@ -60,7 +60,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 
     <!-- 图表行 1 -->
     <div class="charts-row">
-      <div class="chart-card page-card">
+      <div class="chart-card ds-card">
         <h3 class="chart-title">会议类型分布</h3>
         <div class="donut-chart">
           <svg viewBox="0 0 120 120" class="donut-svg">
@@ -108,7 +108,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
         </div>
       </div>
 
-      <div class="chart-card page-card">
+      <div class="chart-card ds-card">
         <h3 class="chart-title">会议趋势</h3>
         <div class="line-chart-area">
           <svg viewBox="0 0 400 160" class="line-svg" preserveAspectRatio="none">
@@ -134,7 +134,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 
     <!-- 图表行 2 -->
     <div class="charts-row three-col">
-      <div class="chart-card page-card">
+      <div class="chart-card ds-card">
         <h3 class="chart-title">部门会议 TOP5</h3>
         <div class="bar-chart">
           <div v-for="item in deptData" :key="item.name" class="bar-row">
@@ -147,7 +147,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
         </div>
       </div>
 
-      <div class="chart-card page-card">
+      <div class="chart-card ds-card">
         <h3 class="chart-title">会议时长分布</h3>
         <div class="duration-legend">
           <div v-for="item in durationData" :key="item.name" class="legend-item">
@@ -166,7 +166,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
         </div>
       </div>
 
-      <div class="chart-card page-card ai-stats">
+      <div class="chart-card ds-card ai-stats">
         <h3 class="chart-title">AI 使用情况</h3>
         <div class="ai-stat-item">
           <p class="ai-stat-label">算法使用率</p>
@@ -202,11 +202,11 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 .stat-card {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  padding: 18px;
+  gap: $space-4;
+  padding: $space-5;
 
   @include respond-to(min-md) {
-    padding: 20px;
+    padding: $space-5;
   }
 
   .stat-icon {
@@ -222,7 +222,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
   .stat-label {
     font-size: $font-size-sm;
     color: $text-secondary;
-    margin: 0 0 6px;
+    margin: 0 0 $space-2;
     line-height: $line-height-base;
   }
 
@@ -453,6 +453,16 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
         margin-left: 4px;
       }
     }
+  }
+}
+
+.statistics-page.page-container {
+  max-width: 80% !important;
+  margin: 0 auto;
+  width: 100%;
+
+  @media (max-width: #{$bp-md - 1px}) {
+    max-width: 100% !important;
   }
 }
 </style>

@@ -98,7 +98,7 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
       <el-button type="primary" :icon="Plus" @click="handleCreate">新建会议</el-button>
     </div>
 
-    <div class="filter-card page-card">
+    <div class="filter-card ds-card">
       <el-input
         v-model="searchQuery"
         placeholder="搜索会议名称"
@@ -119,7 +119,7 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
       </el-select>
     </div>
 
-    <div class="table-card page-card">
+    <div class="table-card ds-card">
       <div class="table-scroll-wrap">
       <el-table :data="meetingList" style="width: 100%; min-width: 720px">
         <el-table-column prop="title" label="会议名称" min-width="220">
@@ -178,13 +178,13 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
 .filter-card {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
-  padding: 14px 16px;
+  gap: $space-3;
+  padding: $space-3 $space-4;
   margin-bottom: $spacing-md;
 
   @include respond-to(min-md) {
     grid-template-columns: 1fr repeat(3, minmax(120px, 160px));
-    padding: 16px 20px;
+    padding: $space-4 $space-5;
     align-items: center;
   }
 
@@ -197,6 +197,11 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
   }
 }
 
+.table-scroll-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .table-card {
   padding: 0;
   overflow: hidden;
@@ -205,7 +210,7 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
     --el-table-border-color: #{$border-lighter};
 
     th.el-table__cell {
-      background: #f8fafc;
+      background: $bg-base;
     }
   }
 
@@ -223,7 +228,7 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
     .avatar-item {
       margin-left: -8px;
       border: 2px solid #fff;
-      font-size: 11px;
+      font-size: $font-size-xs;
       background: $primary-color;
       color: #fff;
 
@@ -233,22 +238,22 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
     }
 
     .avatar-more {
-      margin-left: 6px;
-      font-size: 12px;
+      margin-left: $space-1;
+      font-size: $font-size-xs;
       color: $text-secondary;
     }
   }
 
   .status-text {
-    font-size: 13px;
-    font-weight: 500;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
 
     &.status-done {
-      color: #16a34a;
+      color: $success-color;
     }
 
     &.status-progress {
-      color: #d97706;
+      color: $warning-color;
     }
 
     &.status-pending {
@@ -261,8 +266,8 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px;
-    padding: 14px 16px;
+    gap: $space-3;
+    padding: $space-3 $space-4;
     border-top: 1px solid $border-light;
 
     @include respond-to(md) {
@@ -279,6 +284,16 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
       font-size: $font-size-sm;
       color: $text-secondary;
     }
+  }
+}
+
+.meeting-list-page.page-container {
+  max-width: 80% !important;
+  margin: 0 auto;
+  width: 100%;
+
+  @media (max-width: #{$bp-md - 1px}) {
+    max-width: 100% !important;
   }
 }
 </style>

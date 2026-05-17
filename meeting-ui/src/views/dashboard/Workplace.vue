@@ -194,10 +194,11 @@ const goToMeeting = (id: string) => {
           <div class="meeting-rows__body">
             <div class="meeting-rows__top">
               <span class="meeting-rows__name">{{ item.title }}</span>
-              <span class="ds-tag" :class="`ds-tag--${item.statusType}`">{{ item.status }}</span>
+
             </div>
             <p class="text-small text-secondary">{{ item.time }} · {{ item.participants }} 人参会</p>
             <div class="meeting-rows__tags">
+              <span class="ds-tag" :class="`ds-tag--${item.statusType}`">{{ item.status }}</span>
               <span v-for="tag in item.tags" :key="tag" class="ds-tag ds-tag--neutral">{{ tag }}</span>
             </div>
           </div>
@@ -268,6 +269,8 @@ const goToMeeting = (id: string) => {
   display: flex;
   flex-direction: column;
   gap: $space-5;
+  flex: 1;
+  height: 100%;
   padding-top: $space-2;
   padding-bottom: $space-6;
 
@@ -331,6 +334,8 @@ const goToMeeting = (id: string) => {
     grid-template-columns: 1fr;
     gap: $space-4;
     align-items: stretch;
+    flex: 1;
+    min-height: 0;
 
     @media (min-width: $bp-lg) {
       grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
@@ -343,7 +348,8 @@ const goToMeeting = (id: string) => {
 .gen-card {
   display: flex;
   flex-direction: column;
-  min-height: 220px;
+  height: 100%;
+  min-height: 240px;
   background: linear-gradient(180deg, $primary-light 0%, $bg-white 48%) !important;
 
   &__label {
@@ -380,6 +386,10 @@ const goToMeeting = (id: string) => {
   &__progress {
     margin-top: auto;
     margin-bottom: $space-4;
+
+    @media (max-width: #{$bp-md - 1px}) {
+      margin-top: $space-4;
+    }
   }
 
   &__track {
@@ -416,7 +426,8 @@ const goToMeeting = (id: string) => {
 .todo-card {
   display: flex;
   flex-direction: column;
-  min-height: 220px;
+  height: 100%;
+  min-height: 240px;
 
   &__head {
     margin-bottom: $space-5;
@@ -598,6 +609,9 @@ const goToMeeting = (id: string) => {
   &__body {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   &__top {
@@ -606,16 +620,23 @@ const goToMeeting = (id: string) => {
     gap: $space-3;
     margin-bottom: $space-2;
     flex-wrap: wrap;
+
+    .ds-tag {
+      align-self: center;
+      flex-shrink: 0;
+      line-height: 1;
+    }
   }
 
   &__name {
     font-size: $font-size-md;
     font-weight: $font-weight-medium;
     color: $text-primary;
-    line-height: $line-height-tight;
+    line-height: 1.4;
     @include text-ellipsis;
     flex: 1;
     min-width: 120px;
+    align-self: center;
   }
 
   &__tags {
@@ -623,6 +644,7 @@ const goToMeeting = (id: string) => {
     flex-wrap: wrap;
     gap: $space-2;
     margin-top: $space-2;
+    align-items: center;
   }
 
   &__actions {
@@ -743,6 +765,16 @@ const goToMeeting = (id: string) => {
 @media (max-width: #{$bp-sm - 1px}) {
   .meeting-rows__actions {
     padding-left: 0;
+  }
+}
+
+.workplace.ds-container {
+  max-width: 80% !important;
+  margin: 0 auto;
+  width: 100%;
+
+  @media (max-width: #{$bp-md - 1px}) {
+    max-width: 100% !important;
   }
 }
 </style>
