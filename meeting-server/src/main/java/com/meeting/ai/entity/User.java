@@ -28,6 +28,8 @@ public class User {
 
     private String position;
 
+    private String password;
+
     private Integer status;
 
     @TableField(fill = FieldFill.INSERT)

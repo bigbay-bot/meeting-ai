@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `role` varchar(20) NOT NULL DEFAULT 'user' COMMENT '角色: admin/user',
   `department` varchar(100) DEFAULT NULL COMMENT '部门',
   `position` varchar(100) DEFAULT NULL COMMENT '职位',
+  `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
   `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态: 0-禁用,1-启用',
   `deleted` tinyint NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除,1-已删除',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -241,10 +242,7 @@ INSERT INTO `system_config` (`config_key`, `config_value`, `config_type`, `descr
 ('meeting.auto_generate_minutes', 'true', 'boolean', '是否自动生成纪要', 'meeting', 0),
 ('notification.enable_email', 'false', 'boolean', '是否启用邮件通知', 'notification', 0);
 
--- 12. 插入默认管理员用户 (密码: admin123)
-INSERT INTO `user` (`username`, `email`, `real_name`, `role`, `department`, `position`, `status`) VALUES
-('admin', 'admin@meeting-ai.com', '系统管理员', 'admin', '技术部', '系统管理员', 1),
-('zhangxiaoming', 'zhangxiaoming@meeting-ai.com', '张晓明', 'user', '产品部', '产品设计师', 1);
+-- 12. 默认用户由后端 DataInitializer 在启动时自动创建
 
 -- 13. 创建数据库用户 (根据实际需要修改)
 -- CREATE USER 'meeting_ai_user'@'%' IDENTIFIED BY 'StrongPassword123!';

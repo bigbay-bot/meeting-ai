@@ -36,7 +36,12 @@ instance.interceptors.response.use(
     return res
   },
   (error) => {
-    ElMessage.error(error.message || '网络错误')
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      const userStore = useUserStore()
+      userStore.clearToken()
+      window.location.href = '/login'
+    }
+    ElMessage.error(error.response?.data?.message || error.message || '网络错误')
     return Promise.reject(error)
   }
 )

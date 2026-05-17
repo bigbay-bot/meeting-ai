@@ -25,6 +25,10 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
+jwt:
+  secret: ${JWT_SECRET:meeting-ai-default-secret-key-2026}
+  expiration: 86400000
+
 fastgpt:
   api-key: ${FASTGPT_API_KEY:}
   api-base: ${FASTGPT_API_BASE:https://fastgpt.run/api}

@@ -2,42 +2,58 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { User, Lock } from '@element-plus/icons-vue'
-import { useUserStore } from '@/stores/user'
+import { User, Lock, Message, UserFilled } from '@element-plus/icons-vue'
+import { register } from '@/api/user'
 
 const router = useRouter()
-const userStore = useUserStore()
 
 const form = reactive({
   username: '',
   password: '',
-  remember: false
+  confirmPassword: '',
+  email: '',
+  realName: ''
 })
 
 const loading = ref(false)
 
-const handleLogin = async () => {
-  if (!form.username.trim() || !form.password.trim()) {
-    ElMessage.warning('请输入用户名和密码')
+const handleRegister = async () => {
+  if (!form.username.trim()) {
+    ElMessage.warning('请输入用户名')
     return
   }
+  if (!form.password.trim()) {
+    ElMessage.warning('请输入密码')
+    return
+  }
+  if (form.password !== form.confirmPassword) {
+    ElMessage.warning('两次输入的密码不一致')
+    return
+  }
+  if (!form.email.trim()) {
+    ElMessage.warning('请输入邮箱')
+    return
+  }
+
   loading.value = true
   try {
-    await userStore.doLogin({
+    await register({
       username: form.username,
-      password: form.password
+      password: form.password,
+      email: form.email,
+      realName: form.realName || undefined
     })
-    ElMessage.success('登录成功')
-    router.push('/dashboard')
+    ElMessage.success('注册成功，请登录')
+    router.push('/login')
   } catch (error: any) {
-    ElMessage.error(error.message || '登录失败')
+    ElMessage.error(error.message || '注册失败')
   } finally {
     loading.value = false
   }
 }
 
-const goToRegister = () => {
-  router.push('/register')
+const goToLogin = () => {
+  router.push('/login')
 }
 </script>
 
@@ -63,12 +79,12 @@ const goToRegister = () => {
 
     <div class="login-right">
       <div class="login-box">
-        <h2>欢迎回来</h2>
-        <p class="login-sub">登录您的账户以继续</p>
+        <h2>创建账户</h2>
+        <p class="login-sub">注册以开始使用智会纪要</p>
 
         <el-form :model="form" class="login-form">
           <el-form-item>
-            <el-input v-model="form.username" placeholder="用户名" :prefix-icon="User" size="large" @keyup.enter="handleLogin" />
+            <el-input v-model="form.username" placeholder="用户名" :prefix-icon="User" size="large" />
           </el-form-item>
           <el-form-item>
             <el-input
@@ -78,22 +94,32 @@ const goToRegister = () => {
               :prefix-icon="Lock"
               size="large"
               show-password
-              @keyup.enter="handleLogin"
             />
           </el-form-item>
-          <el-form-item class="remember-row">
-            <el-checkbox v-model="form.remember">记住我</el-checkbox>
-            <el-link type="primary" :underline="false">忘记密码？</el-link>
+          <el-form-item>
+            <el-input
+              v-model="form.confirmPassword"
+              type="password"
+              placeholder="确认密码"
+              :prefix-icon="Lock"
+              size="large"
+              show-password
+            />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="large" style="width: 100%" :loading="loading" @click="handleLogin">
-              登录
-            </el-button>
+            <el-input v-model="form.email" placeholder="邮箱" :prefix-icon="Message" size="large" />
           </el-form-item>
           <el-form-item>
-            <el-button size="large" style="width: 100%" @click="goToRegister">
-              注册账号
+            <el-input v-model="form.realName" placeholder="真实姓名（可选）" :prefix-icon="UserFilled" size="large" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" size="large" style="width: 100%" :loading="loading" @click="handleRegister">
+              注册
             </el-button>
+          </el-form-item>
+          <el-form-item style="text-align: center;">
+            <span style="color: var(--el-text-color-secondary);">已有账户？</span>
+            <el-link type="primary" :underline="false" @click="goToLogin">立即登录</el-link>
           </el-form-item>
         </el-form>
       </div>
@@ -197,12 +223,6 @@ const goToRegister = () => {
       color: $text-secondary;
       margin: 0 0 $space-6;
       line-height: $line-height-base;
-    }
-
-    .remember-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
   }
 }
