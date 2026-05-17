@@ -11,6 +11,9 @@ import {
   ChatDotRound,
   ArrowRight
 } from '@element-plus/icons-vue'
+import { useAIAnalysisStore } from '@/stores/ai-analysis'
+import { submitCrossAnalysis } from '@/api/ai-analysis'
+import { onMounted, watch } from 'vue'
 
 const router = useRouter()
 
@@ -92,9 +95,87 @@ const aiPrompts = ref([
   '对比上次同类会议的进展'
 ])
 
+const aiQuestion = ref('')
+const aiAnswer = ref('')
+const isAskingAI = ref(false)
+
 const goToMeeting = (id: string) => {
   router.push(`/meetings/${id}`)
 }
+
+// AI分析store
+const aiAnalysisStore = useAIAnalysisStore()
+
+// 检查会议是否已选中
+const isMeetingSelected = (meeting: any) => {
+  return aiAnalysisStore.isMeetingSelected(meeting)
+}
+
+// 切换会议选择
+const toggleMeetingSelection = (meeting: any) => {
+  aiAnalysisStore.toggleMeetingSelection(meeting)
+}
+
+// 移除已选会议
+const removeSelectedMeeting = (meetingId: string) => {
+  aiAnalysisStore.removeSelectedMeeting(meetingId)
+}
+
+// 清空已选会议
+const clearSelectedMeetings = () => {
+  aiAnalysisStore.clearSelectedMeetings()
+}
+
+// 发送AI提问
+const askAI = async () => {
+  if (!aiQuestion.value.trim()) return
+
+  isAskingAI.value = true
+  aiAnswer.value = ''
+
+  try {
+    const selectedMeetingIds = aiAnalysisStore.getSelectedMeetingIds()
+
+    // 如果没有选择会议，使用当前类型的所有会议
+    const meetingIds = selectedMeetingIds.length > 0
+      ? selectedMeetingIds
+      : aiAnalysisStore.meetingsByType.map(m => m.id)
+
+    if (meetingIds.length === 0) {
+      aiAnswer.value = '请先选择会议或确保当前类型下有会议数据'
+      return
+    }
+
+    const response = await submitCrossAnalysis({
+      meetingIds,
+      question: aiQuestion.value
+    })
+
+    aiAnswer.value = response.data
+  } catch (error) {
+    console.error('AI提问失败:', error)
+    aiAnswer.value = 'AI服务暂时不可用，请稍后重试'
+  } finally {
+    isAskingAI.value = false
+  }
+}
+
+// 设置AI问题并立即提问
+const setAIQuestionAndAsk = (prompt: string) => {
+  aiQuestion.value = prompt
+  askAI()
+}
+
+// 监听标签切换，加载对应类型的会议
+// watch(aiTab, (newTab) => {
+//   aiAnalysisStore.activeType = newTab as 'all' | 'project' | 'review' | 'summary'
+//   aiAnalysisStore.fetchMeetingsByType(newTab)
+// }, { immediate: true })
+
+// 初始化加载会议
+// onMounted(() => {
+//   aiAnalysisStore.fetchMeetingsByType(aiTab.value)
+// })
 </script>
 
 <template>
@@ -241,12 +322,64 @@ const goToMeeting = (id: string) => {
         </nav>
       </div>
 
+      <!-- 新增：会议选择区域 -->
+      <div class="ai-panel__meeting-selector">
+        <div class="selector-header">
+          <h3 class="h4">选择会议进行分析</h3>
+          <span class="selected-count" v-if="aiAnalysisStore.selectedMeetings.length > 0">
+            已选 {{ aiAnalysisStore.selectedMeetings.length }} 个会议
+          </span>
+        </div>
+
+        <!-- 会议列表 -->
+        <div class="meeting-checklist">
+          <div
+            v-for="meeting in aiAnalysisStore.meetingsByType"
+            :key="meeting.id"
+            class="meeting-check-item"
+            :class="{ selected: isMeetingSelected(meeting) }"
+            @click="toggleMeetingSelection(meeting)"
+          >
+            <el-checkbox :model-value="isMeetingSelected(meeting)" />
+            <div class="meeting-info">
+              <span class="meeting-title">{{ meeting.title }}</span>
+              <span class="meeting-meta">{{ meeting.time }} · {{ meeting.participants?.length || 0 }} 人参会</span>
+            </div>
+          </div>
+          <div v-if="aiAnalysisStore.meetingsByType.length === 0 && !aiAnalysisStore.loading" class="empty-meetings">
+            暂无会议数据
+          </div>
+          <div v-if="aiAnalysisStore.loading" class="loading-meetings">
+            加载中...
+          </div>
+        </div>
+
+        <!-- 已选会议展示 -->
+        <div class="selected-meetings-panel" v-if="aiAnalysisStore.selectedMeetings.length > 0">
+          <div class="panel-header">
+            <span>已选会议</span>
+            <el-button type="text" size="small" @click="clearSelectedMeetings">清空</el-button>
+          </div>
+          <div class="selected-tags">
+            <el-tag
+              v-for="meeting in aiAnalysisStore.selectedMeetings"
+              :key="meeting.id"
+              closable
+              @close="removeSelectedMeeting(meeting.id)"
+            >
+              {{ meeting.title }}
+            </el-tag>
+          </div>
+        </div>
+      </div>
+
       <div class="ai-panel__prompts">
         <button
           v-for="(prompt, i) in aiPrompts"
           :key="i"
           type="button"
           class="ai-panel__chip"
+          @click="() => setAIQuestionAndAsk(prompt)"
         >
           {{ prompt }}
         </button>
@@ -254,11 +387,32 @@ const goToMeeting = (id: string) => {
 
       <div class="ai-panel__compose">
         <input
+          v-model="aiQuestion"
           class="ds-input"
           type="text"
           placeholder="输入你的问题，AI 将为你解答…"
+          @keyup.enter="askAI"
+          :disabled="isAskingAI"
         />
-        <button type="button" class="ds-btn ds-btn--primary">发送</button>
+        <button
+          type="button"
+          class="ds-btn ds-btn--primary"
+          @click="askAI"
+          :disabled="isAskingAI || !aiQuestion.trim()"
+        >
+          <span v-if="isAskingAI">分析中...</span>
+          <span v-else>发送</span>
+        </button>
+      </div>
+
+      <!-- AI回答展示 -->
+      <div class="ai-panel__answer" v-if="aiAnswer">
+        <div class="answer-header">
+          <h3 class="h4">AI分析结果</h3>
+        </div>
+        <div class="answer-content">
+          {{ aiAnswer }}
+        </div>
       </div>
     </section>
   </div>
@@ -269,8 +423,6 @@ const goToMeeting = (id: string) => {
   display: flex;
   flex-direction: column;
   gap: $space-5;
-  flex: 1;
-  height: 100%;
   padding-top: $space-2;
   padding-bottom: $space-6;
 
@@ -332,14 +484,12 @@ const goToMeeting = (id: string) => {
   &__hero {
     display: grid;
     grid-template-columns: 1fr;
-    gap: $space-4;
+    gap: $space-5;
     align-items: stretch;
-    flex: 1;
-    min-height: 0;
 
     @media (min-width: $bp-lg) {
-      grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
-      gap: $space-5;
+      grid-template-columns: 1.62fr 1fr;
+      gap: $space-6;
     }
   }
 }
@@ -348,8 +498,7 @@ const goToMeeting = (id: string) => {
 .gen-card {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 240px;
+  min-height: 320px;
   background: linear-gradient(180deg, $primary-light 0%, $bg-white 48%) !important;
 
   &__label {
@@ -371,7 +520,7 @@ const goToMeeting = (id: string) => {
   }
 
   &__name {
-    margin: 0 0 $space-2;
+    margin: 0 0 $space-3;
     font-size: $font-size-lg;
     font-weight: $font-weight-semibold;
     color: $text-primary;
@@ -379,13 +528,14 @@ const goToMeeting = (id: string) => {
   }
 
   &__meta {
-    margin: 0 0 $space-5;
+    margin: 0 0 $space-6;
     font-size: $font-size-sm;
+    color: $text-secondary;
   }
 
   &__progress {
     margin-top: auto;
-    margin-bottom: $space-4;
+    margin-bottom: $space-5;
 
     @media (max-width: #{$bp-md - 1px}) {
       margin-top: $space-4;
@@ -421,16 +571,21 @@ const goToMeeting = (id: string) => {
     font-family: $font-family-num;
     color: $primary-color;
   }
+
+  .ds-btn {
+    align-self: flex-start;
+    margin-top: $space-4;
+  }
 }
 
 .todo-card {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 240px;
+  min-height: 320px;
+  background: linear-gradient(180deg, $bg-white 0%, $bg-hover 48%) !important;
 
   &__head {
-    margin-bottom: $space-5;
+    margin-bottom: $space-6;
   }
 
   &__title {
@@ -458,7 +613,7 @@ const goToMeeting = (id: string) => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $space-4 0;
+    padding: $space-3 0;
     border-bottom: 1px solid $border-light;
     font-size: $font-size-base;
     color: $text-regular;
@@ -471,6 +626,11 @@ const goToMeeting = (id: string) => {
 
     &:hover {
       color: $text-primary;
+      background: $bg-white;
+      margin: 0 (-$space-4);
+      padding-left: $space-4;
+      padding-right: $space-4;
+      border-radius: $radius-md;
     }
   }
 
@@ -490,22 +650,24 @@ const goToMeeting = (id: string) => {
   }
 
   &__link {
-    margin-top: $space-4;
-    padding: 0;
+    margin-top: auto;
+    padding: $space-3 0 0;
     border: none;
     background: none;
     font-size: $font-size-sm;
-    font-weight: $font-weight-medium;
+    font-weight: $font-weight-semibold;
     color: $primary-color;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: $space-1;
+    gap: $space-2;
     align-self: flex-start;
     transition: $transition-base;
+    border-top: 1px solid $border-light;
 
     &:hover {
-      gap: $space-2;
+      color: $primary-hover;
+      gap: $space-3;
     }
   }
 }
@@ -738,6 +900,100 @@ const goToMeeting = (id: string) => {
       }
     }
   }
+
+  @media (max-width: #{$bp-sm - 1px}) {
+    .meeting-rows__actions {
+      padding-left: 0;
+    }
+
+    &__meeting-selector {
+      margin-bottom: $space-5;
+      padding: $space-4;
+      background: $bg-hover;
+      border-radius: $radius-lg;
+    }
+
+    .selector-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $space-3;
+    }
+
+    .selected-count {
+      font-size: $font-size-sm;
+      color: $primary-color;
+      font-weight: $font-weight-medium;
+    }
+
+    .meeting-checklist {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: $space-4;
+    }
+
+    .meeting-check-item {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+      padding: $space-3;
+      border-radius: $radius-md;
+      cursor: pointer;
+      transition: $transition-base;
+
+      &:hover {
+        background: $bg-white;
+      }
+
+      &.selected {
+        background: $primary-light;
+      }
+
+      .meeting-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .meeting-title {
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+        color: $text-primary;
+      }
+
+      .meeting-meta {
+        font-size: $font-size-xs;
+        color: $text-secondary;
+      }
+    }
+
+    .empty-meetings, .loading-meetings {
+      text-align: center;
+      padding: $space-4;
+      color: $text-secondary;
+      font-size: $font-size-sm;
+    }
+
+    .selected-meetings-panel {
+      border-top: 1px solid $border-light;
+      padding-top: $space-4;
+
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: $space-3;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-medium;
+      }
+
+      .selected-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $space-2;
+      }
+    }
+  }
 }
 
 @keyframes pulse {
@@ -762,14 +1018,9 @@ const goToMeeting = (id: string) => {
   }
 }
 
-@media (max-width: #{$bp-sm - 1px}) {
-  .meeting-rows__actions {
-    padding-left: 0;
-  }
-}
 
 .workplace.ds-container {
-  max-width: 80% !important;
+  max-width: 90% !important;
   margin: 0 auto;
   width: 100%;
 
