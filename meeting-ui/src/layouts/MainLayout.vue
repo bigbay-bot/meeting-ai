@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   HomeFilled,
@@ -7,14 +7,28 @@ import {
   TrendCharts,
   Setting,
   ArrowDown,
-  Expand
+  Expand,
+  SwitchButton
 } from '@element-plus/icons-vue'
 import { useBreakpoint } from '@/composables/useBreakpoint'
+import { useUserStore } from '@/stores/user'
 
 const route = useRoute()
 const router = useRouter()
+const userStore = useUserStore()
 const isMobile = useBreakpoint('(max-width: 1023px)')
 const sidebarOpen = ref(false)
+
+onMounted(() => {
+  if (userStore.isLoggedIn) {
+    userStore.fetchUserInfo().catch(() => {})
+  }
+})
+
+const handleLogout = () => {
+  userStore.clearToken()
+  router.push('/login')
+}
 
 const menuItems = [
   { path: '/dashboard', title: '首页', icon: HomeFilled },
@@ -95,16 +109,16 @@ watch(
         </div>
       </div>
 
-      <div class="user-section">
+      <div class="user-section" @click="handleLogout" style="cursor: pointer;">
         <el-avatar
           :size="36"
-          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+          :src="userStore.userInfo.avatar || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"
         />
         <div class="user-info">
-          <span class="user-name">张晓明</span>
-          <span class="user-role">产品设计师</span>
+          <span class="user-name">{{ userStore.userInfo.realName || userStore.userInfo.username || '用户' }}</span>
+          <span class="user-role">{{ userStore.userInfo.position || userStore.userInfo.role || '用户' }}</span>
         </div>
-        <el-icon class="user-arrow"><ArrowDown /></el-icon>
+        <el-icon class="user-arrow"><SwitchButton /></el-icon>
       </div>
     </aside>
 

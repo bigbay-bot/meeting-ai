@@ -59,13 +59,30 @@ const routes: RouteRecordRaw[] = [
   }
 ]
 
+const publicPaths = ['/login', '/register']
+
 const router = createRouter({
   history: createWebHistory(),
   routes
 })
 
-router.beforeEach((to) => {
+router.beforeEach((to, from, next) => {
   document.title = to.meta.title ? `${to.meta.title} - 智会纪要` : '智会纪要'
+
+  const token = localStorage.getItem('token')
+  const isPublic = publicPaths.includes(to.path)
+
+  if (!token && !isPublic) {
+    next('/login')
+    return
+  }
+
+  if (token && isPublic) {
+    next('/dashboard')
+    return
+  }
+
+  next()
 })
 
 export default router
