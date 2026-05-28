@@ -129,7 +129,7 @@ const handleReset = () => {
 
 <style scoped lang="scss">
 .settings-page {
-  max-width: 1200px;
+  max-width: 90%;
 }
 
 .settings-tabs {
@@ -279,7 +279,7 @@ const handleReset = () => {
 }
 
 .settings-page.page-container {
-  max-width: 80% !important;
+  max-width: 90% !important;
   margin: 0 auto;
   width: 100%;
 

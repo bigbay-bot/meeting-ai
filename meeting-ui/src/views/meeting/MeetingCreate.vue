@@ -260,4 +260,14 @@ const handleCancel = () => {
   gap: $space-3;
   padding-top: $space-2;
 }
+
+.meeting-create.page-container {
+  max-width: 90% !important;
+  margin: 0 auto;
+  width: 100%;
+
+  @media (max-width: #{$bp-md - 1px}) {
+    max-width: 100% !important;
+  }
+}
 </style>

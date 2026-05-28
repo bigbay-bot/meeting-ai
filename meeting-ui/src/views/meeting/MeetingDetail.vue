@@ -391,4 +391,14 @@ const getStatusLabel = (status: string) => {
     line-height: $line-height-base;
   }
 }
+
+.meeting-detail.page-container {
+  max-width: 90% !important;
+  margin: 0 auto;
+  width: 100%;
+
+  @media (max-width: #{$bp-md - 1px}) {
+    max-width: 100% !important;
+  }
+}
 </style>

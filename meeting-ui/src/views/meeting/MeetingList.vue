@@ -288,7 +288,7 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
 }
 
 .meeting-list-page.page-container {
-  max-width: 80% !important;
+  max-width: 90% !important;
   margin: 0 auto;
   width: 100%;
 

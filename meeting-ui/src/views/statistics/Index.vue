@@ -457,7 +457,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 }
 
 .statistics-page.page-container {
-  max-width: 80% !important;
+  max-width: 90% !important;
   margin: 0 auto;
   width: 100%;
 
