@@ -22,14 +22,14 @@ export const useUserStore = defineStore('user', () => {
 
   const doLogin = async (data: LoginRequest) => {
     const res = await login(data)
-    setToken(res.data.token)
-    userInfo.value = res.data
-    return res.data
+    setToken(res.token)
+    userInfo.value = res
+    return res
   }
 
   const fetchUserInfo = async () => {
     const res = await getUserInfo()
-    userInfo.value = res.data
+    userInfo.value = res
   }
 
   return {

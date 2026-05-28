@@ -16,6 +16,8 @@ instance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
+    config.headers['Cache-Control'] = 'no-cache'
+    config.headers['Pragma'] = 'no-cache'
     return config
   },
   (error) => Promise.reject(error)
@@ -33,7 +35,7 @@ instance.interceptors.response.use(
       }
       return Promise.reject(new Error(res.message))
     }
-    return res
+    return res.data
   },
   (error) => {
     if (error.response?.status === 401 || error.response?.status === 403) {
@@ -47,19 +49,19 @@ instance.interceptors.response.use(
 )
 
 export function get<T = unknown>(url: string, config?: AxiosRequestConfig) {
-  return instance.get<any, { data: T }>(url, config)
+  return instance.get<any, T>(url, config)
 }
 
 export function post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) {
-  return instance.post<any, { data: T }>(url, data, config)
+  return instance.post<any, T>(url, data, config)
 }
 
 export function put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) {
-  return instance.put<any, { data: T }>(url, data, config)
+  return instance.put<any, T>(url, data, config)
 }
 
 export function del<T = unknown>(url: string, config?: AxiosRequestConfig) {
-  return instance.delete<any, { data: T }>(url, config)
+  return instance.delete<any, T>(url, config)
 }
 
 export default {

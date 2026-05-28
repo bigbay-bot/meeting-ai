@@ -31,13 +31,13 @@ export interface UserInfo {
 }
 
 export function login(data: LoginRequest) {
-  return request.post<LoginResponse>('/api/v1/auth/login', data)
+  return request.post<LoginResponse>('/v1/auth/login', data)
 }
 
 export function register(data: RegisterRequest) {
-  return request.post<void>('/api/v1/auth/register', data)
+  return request.post<void>('/v1/auth/register', data)
 }
 
 export function getUserInfo() {
-  return request.get<UserInfo>('/api/v1/user/info')
+  return request.get<UserInfo>('/v1/user/info')
 }

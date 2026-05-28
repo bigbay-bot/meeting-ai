@@ -21,13 +21,13 @@ export interface ActionItem {
 }
 
 export function generateMinutes(meetingId: string) {
-  return request.post<Minutes>(`/api/v1/meetings/${meetingId}/minutes/generate`)
+  return request.post<Minutes>(`/v1/meetings/${meetingId}/minutes/generate`)
 }
 
 export function getMinutesById(id: string) {
-  return request.get<Minutes>(`/api/v1/minutes/${id}`)
+  return request.get<Minutes>(`/v1/minutes/${id}`)
 }
 
 export function updateMinutes(id: string, data: Partial<Minutes>) {
-  return request.put(`/api/v1/minutes/${id}`, data)
+  return request.put(`/v1/minutes/${id}`, data)
 }

@@ -6,7 +6,7 @@ export interface Meeting {
   title: string
   organizer: string
   time: string
-  duration: string
+  duration: number
   location: string
   participants: string[]
   status: string
@@ -23,7 +23,7 @@ export interface MeetingListParams {
 }
 
 export function getMeetingList(params: MeetingListParams) {
-  return request.get<PageResult<Meeting>>('/api/v1/meetings', { params })
+  return request.get<PageResult<Meeting>>('/v1/meetings', { params })
 }
 
 export function getMeetingById(id: string) {
@@ -31,7 +31,7 @@ export function getMeetingById(id: string) {
 }
 
 export function createMeeting(data: Partial<Meeting>) {
-  return request.post<string>('/api/v1/meetings', data)
+  return request.post<string>('/v1/meetings', data)
 }
 
 export function updateMeeting(id: string, data: Partial<Meeting>) {

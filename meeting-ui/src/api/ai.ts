@@ -13,9 +13,9 @@ export interface AiChatResponse {
 }
 
 export function chatWithAI(data: AiChatRequest) {
-  return request.post<AiChatResponse>('/api/v1/ai/chat', data)
+  return request.post<AiChatResponse>('/v1/ai/chat', data)
 }
 
 export function testConnection() {
-  return request.get('/api/v1/ai/health')
+  return request.get('/v1/ai/health')
 }

@@ -66,7 +66,7 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   document.title = to.meta.title ? `${to.meta.title} - 智会纪要` : '智会纪要'
 
   const token = localStorage.getItem('token')

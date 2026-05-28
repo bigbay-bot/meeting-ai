@@ -10,8 +10,8 @@ export function useMinutes() {
     loading.value = true
     try {
       const res = await generateMinutes(meetingId)
-      minutes.value = res.data
-      return res.data
+      minutes.value = res
+      return res
     } finally {
       loading.value = false
     }
@@ -21,7 +21,7 @@ export function useMinutes() {
     loading.value = true
     try {
       const res = await getMinutesById(id)
-      minutes.value = res.data
+      minutes.value = res
     } finally {
       loading.value = false
     }

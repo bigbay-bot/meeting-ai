@@ -12,8 +12,8 @@ export function useMeeting() {
     loading.value = true
     try {
       const res = await getMeetingList(params)
-      meetings.value = res.data.records
-      total.value = res.data.total
+      meetings.value = res.records
+      total.value = res.total
     } finally {
       loading.value = false
     }
@@ -23,7 +23,7 @@ export function useMeeting() {
     loading.value = true
     try {
       const res = await getMeetingById(id)
-      currentMeeting.value = res.data
+      currentMeeting.value = res
     } finally {
       loading.value = false
     }
