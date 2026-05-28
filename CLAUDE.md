@@ -38,3 +38,15 @@ meeting-ai
 - **为什么 FastGPT**: 自带知识集管理，支持工作流编排，对中文场景优化好，私有化部署成本低
 - **为什么 MyBatis-Plus**: 团队熟悉，代码生成能力强，复杂 SQL 可控
 - **为什么 Pinia**: Vue3 官方推荐，TypeScript 支持好，比 Vuex 更轻量
+
+## 前端 UI 设计规范
+**所有前端页面开发/修改前必须先阅读**: [UI 设计规范](docs/ui-design-standard.md)
+
+核心规则摘要（完整规范见上方文档）：
+- **卡片**: 必须使用 `ds-card ds-card--pad-lg ds-card--flat`
+- **按钮**: 主按钮用 `ds-btn ds-btn--primary`，禁止 `el-button` 作为主按钮
+- **标签**: 用 `ds-tag` 及其变体，禁止 `el-tag`
+- **标签切换**: 用 `section-head` + `tab-bar`，禁止 `el-tabs`
+- **间距**: 必须使用 `$space-*` 变量，禁止硬编码像素值
+- **字号/圆角/颜色**: 必须使用 variables.scss 中定义的变量
+- **页面容器**: `page-container` class + `max-width: 90%`

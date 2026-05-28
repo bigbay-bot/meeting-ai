@@ -672,56 +672,8 @@ const setAIQuestionAndAsk = (prompt: string) => {
   }
 }
 
-.section-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: $space-3 $space-4;
-  margin-bottom: $space-5;
-  padding-bottom: $space-4;
-  border-bottom: 1px solid $border-light;
-
-  &__title {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: $space-2;
-
-    &--ai {
-      font-size: $font-size-xl;
-    }
-  }
-}
-
-.tab-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $space-1;
-
-  &__btn {
-    padding: $space-2 $space-4;
-    border: none;
-    border-radius: $radius-md;
-    background: transparent;
-    font-family: $font-family;
-    font-size: $font-size-base;
-    font-weight: $font-weight-medium;
-    color: $text-secondary;
-    cursor: pointer;
-    transition: $transition-base;
-    line-height: $line-height-tight;
-
-    &:hover {
-      color: $text-primary;
-      background: $bg-hover;
-    }
-
-    &.is-active {
-      color: $primary-color;
-      background: $primary-light;
-    }
-  }
+.section-head__title--ai {
+  font-size: $font-size-xl;
 }
 
 .meeting-rows {

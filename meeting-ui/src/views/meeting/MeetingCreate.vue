@@ -48,14 +48,14 @@ const handleCancel = () => {
 <template>
   <div class="meeting-create page-container">
     <div class="page-header">
-      <el-button text class="back-btn" @click="router.push('/meetings')">
-        <el-icon :size="18"><ArrowLeft /></el-icon>
+      <button type="button" class="ds-btn ds-btn--ghost ds-btn--sm" @click="router.push('/meetings')">
+        <el-icon :size="16"><ArrowLeft /></el-icon>
         返回
-      </el-button>
+      </button>
       <h1 class="page-title">新建会议</h1>
     </div>
 
-    <div class="form-card ds-card">
+    <div class="ds-card ds-card--pad-lg ds-card--flat">
       <el-form
         ref="formRef"
         :model="form"
@@ -146,10 +146,8 @@ const handleCancel = () => {
 
         <el-form-item>
           <div class="form-actions">
-            <el-button type="primary" size="large" @click="handleSubmit">
-              创建会议
-            </el-button>
-            <el-button size="large" @click="handleCancel">取消</el-button>
+            <button type="button" class="ds-btn ds-btn--primary" @click="handleSubmit">创建会议</button>
+            <button type="button" class="ds-btn ds-btn--ghost" @click="handleCancel">取消</button>
           </div>
         </el-form-item>
       </el-form>
@@ -158,40 +156,6 @@ const handleCancel = () => {
 </template>
 
 <style scoped lang="scss">
-.page-header {
-  display: flex;
-  align-items: center;
-  gap: $space-3;
-  margin-bottom: $space-5;
-
-  .back-btn {
-    padding: 0;
-    height: auto;
-    font-size: $font-size-base;
-    color: $text-secondary;
-
-    &:hover {
-      color: $primary-color;
-    }
-  }
-
-  .page-title {
-    font-size: $font-size-xl;
-    font-weight: $font-weight-bold;
-    color: $text-primary;
-    margin: 0;
-  }
-}
-
-.form-card {
-  max-width: 720px;
-  padding: $space-5;
-
-  @include respond-to(sm) {
-    padding: $space-4;
-  }
-}
-
 .create-form {
   :deep(.el-form-item__label) {
     font-weight: $font-weight-medium;

@@ -78,11 +78,11 @@ const meetingList = ref([
   }
 ])
 
-const getStatusClass = (status: string) => {
+const getStatusTagClass = (status: string) => {
   const map: Record<string, string> = {
-    completed: 'status-done',
-    generating: 'status-progress',
-    pending: 'status-pending'
+    completed: 'ds-tag--success',
+    generating: 'ds-tag--warning',
+    pending: 'ds-tag--neutral'
   }
   return map[status] || ''
 }
@@ -95,10 +95,13 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
   <div class="meeting-list-page page-container">
     <div class="page-header">
       <h1 class="page-title">历史会议</h1>
-      <el-button type="primary" :icon="Plus" @click="handleCreate">新建会议</el-button>
+      <button type="button" class="ds-btn ds-btn--primary" @click="handleCreate">
+        <el-icon :size="16"><Plus /></el-icon>
+        新建会议
+      </button>
     </div>
 
-    <div class="filter-card ds-card">
+    <div class="ds-card ds-card--pad-lg ds-card--flat filter-card">
       <el-input
         v-model="searchQuery"
         placeholder="搜索会议名称"
@@ -119,7 +122,7 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
       </el-select>
     </div>
 
-    <div class="table-card ds-card">
+    <div class="ds-card ds-card--flat table-card">
       <div class="table-scroll-wrap">
       <el-table :data="meetingList" style="width: 100%; min-width: 720px">
         <el-table-column prop="title" label="会议名称" min-width="220">
@@ -129,7 +132,7 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
         </el-table-column>
         <el-table-column prop="type" label="会议类型" width="120">
           <template #default="{ row }">
-            <el-tag size="small" type="info">{{ row.type }}</el-tag>
+            <span class="ds-tag ds-tag--neutral">{{ row.type }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="time" label="时间" width="160" />
@@ -150,7 +153,7 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
         </el-table-column>
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">
-            <span class="status-text" :class="getStatusClass(row.status)">
+            <span class="ds-tag" :class="getStatusTagClass(row.status)">
               {{ row.statusLabel }}
             </span>
           </template>
@@ -179,12 +182,10 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
   display: grid;
   grid-template-columns: 1fr;
   gap: $space-3;
-  padding: $space-3 $space-4;
-  margin-bottom: $spacing-md;
+  margin-bottom: $space-5;
 
   @include respond-to(min-md) {
     grid-template-columns: 1fr repeat(3, minmax(120px, 160px));
-    padding: $space-4 $space-5;
     align-items: center;
   }
 
@@ -240,23 +241,6 @@ const handleView = (row: { id: string }) => router.push(`/meetings/${row.id}`)
     .avatar-more {
       margin-left: $space-1;
       font-size: $font-size-xs;
-      color: $text-secondary;
-    }
-  }
-
-  .status-text {
-    font-size: $font-size-sm;
-    font-weight: $font-weight-medium;
-
-    &.status-done {
-      color: $success-color;
-    }
-
-    &.status-progress {
-      color: $warning-color;
-    }
-
-    &.status-pending {
       color: $text-secondary;
     }
   }

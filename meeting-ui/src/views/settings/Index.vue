@@ -4,6 +4,13 @@ import { Plus, Rank } from '@element-plus/icons-vue'
 
 const activeTab = ref('template')
 
+const settingsTabs = [
+  { label: '模板设置', name: 'template' },
+  { label: '功能模块', name: 'modules' },
+  { label: '成员管理', name: 'members' },
+  { label: '集成设置', name: 'integration' }
+]
+
 const templates = ref([
   {
     id: '1',
@@ -59,105 +66,109 @@ const handleReset = () => {
       <h1 class="page-title">设置中心</h1>
     </div>
 
-    <el-tabs v-model="activeTab" class="settings-tabs">
-      <el-tab-pane label="模板设置" name="template">
-        <div class="template-section">
-          <div class="section-toolbar">
-            <h3>纪要模板设置</h3>
-            <el-button type="primary" :icon="Plus" size="small">新建模板</el-button>
-          </div>
+    <div class="section-head">
+      <span />
+      <nav class="tab-bar">
+        <button
+          v-for="tab in settingsTabs"
+          :key="tab.name"
+          type="button"
+          class="tab-bar__btn"
+          :class="{ 'is-active': activeTab === tab.name }"
+          @click="activeTab = tab.name"
+        >
+          {{ tab.label }}
+        </button>
+      </nav>
+    </div>
 
-          <div class="template-grid">
-            <div
-              v-for="tpl in templates"
-              :key="tpl.id"
-              class="template-card ds-card"
-              :class="{ active: tpl.active }"
-            >
-              <div class="tpl-header">
-                <span class="tpl-name">{{ tpl.name }}</span>
-                <el-tag v-if="tpl.active" type="primary" size="small">使用中</el-tag>
-              </div>
-              <ul class="tpl-sections">
-                <li v-for="sec in tpl.sections" :key="sec">{{ sec }}</li>
-              </ul>
-              <div class="tpl-actions">
-                <el-button link type="primary" size="small">编辑</el-button>
-                <el-button v-if="!tpl.active" link size="small">设为默认</el-button>
-              </div>
+    <!-- 模板设置 -->
+    <div v-if="activeTab === 'template'">
+      <div class="template-section">
+        <div class="section-toolbar">
+          <h2 class="h3">纪要模板设置</h2>
+          <button type="button" class="ds-btn ds-btn--primary ds-btn--sm">
+            <el-icon :size="14"><Plus /></el-icon>
+            新建模板
+          </button>
+        </div>
+
+        <div class="template-grid">
+          <div
+            v-for="tpl in templates"
+            :key="tpl.id"
+            class="template-card ds-card ds-card--flat"
+            :class="{ active: tpl.active }"
+          >
+            <div class="tpl-header">
+              <span class="tpl-name">{{ tpl.name }}</span>
+              <span v-if="tpl.active" class="ds-tag ds-tag--success">使用中</span>
+            </div>
+            <ul class="tpl-sections">
+              <li v-for="sec in tpl.sections" :key="sec">{{ sec }}</li>
+            </ul>
+            <div class="tpl-actions">
+              <el-button link type="primary" size="small">编辑</el-button>
+              <el-button v-if="!tpl.active" link size="small">设为默认</el-button>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="module-section">
-          <h3>首页功能模块设置</h3>
-          <div class="module-list ds-card">
-            <div v-for="mod in modules" :key="mod.name" class="module-item">
-              <el-icon class="drag-handle"><Rank /></el-icon>
-              <span class="module-name">{{ mod.name }}</span>
-              <el-switch v-model="mod.enabled" />
-            </div>
+      <div class="module-section">
+        <h2 class="h3">首页功能模块设置</h2>
+        <div class="module-list ds-card ds-card--pad-lg ds-card--flat">
+          <div v-for="mod in modules" :key="mod.name" class="module-item">
+            <el-icon class="drag-handle"><Rank /></el-icon>
+            <span class="module-name">{{ mod.name }}</span>
+            <el-switch v-model="mod.enabled" />
           </div>
         </div>
+      </div>
 
-        <div class="settings-footer">
-          <el-button @click="handleReset">恢复默认</el-button>
-          <el-button type="primary" :loading="saveLoading" @click="handleSave">保存设置</el-button>
-        </div>
-      </el-tab-pane>
+      <div class="settings-footer">
+        <button type="button" class="ds-btn ds-btn--ghost" @click="handleReset">恢复默认</button>
+        <button type="button" class="ds-btn ds-btn--primary" :disabled="saveLoading" @click="handleSave">
+          {{ saveLoading ? '保存中...' : '保存设置' }}
+        </button>
+      </div>
+    </div>
 
-      <el-tab-pane label="功能模块" name="modules">
-        <div class="empty-tab ds-card">
-          <p>功能模块配置开发中...</p>
-        </div>
-      </el-tab-pane>
+    <!-- 功能模块 -->
+    <div v-if="activeTab === 'modules'">
+      <div class="ds-card ds-card--pad-lg ds-card--flat empty-tab">
+        <p>功能模块配置开发中...</p>
+      </div>
+    </div>
 
-      <el-tab-pane label="成员管理" name="members">
-        <div class="empty-tab ds-card">
-          <p>成员管理功能开发中...</p>
-        </div>
-      </el-tab-pane>
+    <!-- 成员管理 -->
+    <div v-if="activeTab === 'members'">
+      <div class="ds-card ds-card--pad-lg ds-card--flat empty-tab">
+        <p>成员管理功能开发中...</p>
+      </div>
+    </div>
 
-      <el-tab-pane label="集成设置" name="integration">
-        <div class="empty-tab ds-card">
-          <p>第三方集成配置开发中...</p>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
+    <!-- 集成设置 -->
+    <div v-if="activeTab === 'integration'">
+      <div class="ds-card ds-card--pad-lg ds-card--flat empty-tab">
+        <p>第三方集成配置开发中...</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.settings-page {
-  max-width: 90%;
-}
-
-.settings-tabs {
-  :deep(.el-tabs__header) {
-    margin-bottom: $spacing-lg;
-  }
-
-  :deep(.el-tabs__item) {
-    font-size: 15px;
-    padding: 0 20px;
-  }
-}
-
 .template-section {
-  margin-bottom: $spacing-xl;
+  margin-bottom: $space-6;
 
   .section-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: $spacing-md;
+    margin-bottom: $space-5;
 
-    h3 {
-      font-size: $font-size-md;
-      font-weight: $font-weight-semibold;
+    h2 {
       margin: 0;
-      color: $text-title;
-      line-height: $line-height-tight;
     }
   }
 }
@@ -165,7 +176,7 @@ const handleReset = () => {
 .template-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: $spacing-md;
+  gap: $space-4;
 
   @include respond-to(min-md) {
     grid-template-columns: repeat(2, 1fr);
@@ -177,7 +188,7 @@ const handleReset = () => {
 }
 
 .template-card {
-  padding: 16px;
+  padding: $space-4;
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s;
 
@@ -190,7 +201,7 @@ const handleReset = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: $space-3;
 
     .tpl-name {
       font-size: $font-size-base;
@@ -202,7 +213,7 @@ const handleReset = () => {
   .tpl-sections {
     list-style: none;
     padding: 0;
-    margin: 0 0 12px;
+    margin: 0 0 $space-3;
 
     li {
       font-size: $font-size-xs;
@@ -213,30 +224,27 @@ const handleReset = () => {
 
   .tpl-actions {
     display: flex;
-    gap: 8px;
-    border-top: 1px solid $border-lighter;
-    padding-top: 10px;
+    gap: $space-2;
+    border-top: 1px solid $border-light;
+    padding-top: $space-3;
   }
 }
 
 .module-section {
-  h3 {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 $spacing-md;
-    color: $text-primary;
+  margin-bottom: $space-6;
+
+  h2 {
+    margin: 0 0 $space-5;
   }
 }
 
 .module-list {
-  padding: 8px 0;
-
   .module-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 20px;
-    border-bottom: 1px solid $border-lighter;
+    gap: $space-3;
+    padding: $space-4 $space-5;
+    border-bottom: 1px solid $border-light;
 
     &:last-child {
       border-bottom: none;
@@ -249,7 +257,7 @@ const handleReset = () => {
 
     .module-name {
       flex: 1;
-      font-size: 14px;
+      font-size: $font-size-base;
       color: $text-primary;
     }
   }
@@ -258,24 +266,21 @@ const handleReset = () => {
 .settings-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: $spacing-xl;
-  padding-top: $spacing-lg;
+  gap: $space-3;
+  padding-top: $space-5;
   border-top: 1px solid $border-light;
-  flex-wrap: wrap;
 
   @include respond-to(sm) {
-    .el-button {
+    .ds-btn {
       flex: 1;
     }
   }
 }
 
 .empty-tab {
-  padding: 60px;
   text-align: center;
   color: $text-secondary;
-  font-size: 14px;
+  font-size: $font-size-base;
 }
 
 .settings-page.page-container {

@@ -44,7 +44,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 
     <!-- 指标卡片 -->
     <div class="stats-grid">
-      <div v-for="item in statsOverview" :key="item.label" class="stat-card ds-card">
+      <div v-for="item in statsOverview" :key="item.label" class="stat-card ds-card ds-card--pad-lg ds-card--flat">
         <div class="stat-icon" :style="{ background: item.bg, color: item.color }">
           <el-icon :size="22"><component :is="item.icon" /></el-icon>
         </div>
@@ -60,8 +60,8 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 
     <!-- 图表行 1 -->
     <div class="charts-row">
-      <div class="chart-card ds-card">
-        <h3 class="chart-title">会议类型分布</h3>
+      <div class="chart-card ds-card ds-card--pad-lg ds-card--flat">
+        <h3 class="h3 chart-title">会议类型分布</h3>
         <div class="donut-chart">
           <svg viewBox="0 0 120 120" class="donut-svg">
             <circle cx="60" cy="60" r="45" fill="none" stroke="#E8EFFF" stroke-width="16" />
@@ -108,8 +108,8 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
         </div>
       </div>
 
-      <div class="chart-card ds-card">
-        <h3 class="chart-title">会议趋势</h3>
+      <div class="chart-card ds-card ds-card--pad-lg ds-card--flat">
+        <h3 class="h3 chart-title">会议趋势</h3>
         <div class="line-chart-area">
           <svg viewBox="0 0 400 160" class="line-svg" preserveAspectRatio="none">
             <polyline
@@ -134,8 +134,8 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 
     <!-- 图表行 2 -->
     <div class="charts-row three-col">
-      <div class="chart-card ds-card">
-        <h3 class="chart-title">部门会议 TOP5</h3>
+      <div class="chart-card ds-card ds-card--pad-lg ds-card--flat">
+        <h3 class="h3 chart-title">部门会议 TOP5</h3>
         <div class="bar-chart">
           <div v-for="item in deptData" :key="item.name" class="bar-row">
             <span class="bar-label">{{ item.name }}</span>
@@ -147,8 +147,8 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
         </div>
       </div>
 
-      <div class="chart-card ds-card">
-        <h3 class="chart-title">会议时长分布</h3>
+      <div class="chart-card ds-card ds-card--pad-lg ds-card--flat">
+        <h3 class="h3 chart-title">会议时长分布</h3>
         <div class="duration-legend">
           <div v-for="item in durationData" :key="item.name" class="legend-item">
             <span class="dot" :style="{ background: item.color }" />
@@ -166,8 +166,8 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
         </div>
       </div>
 
-      <div class="chart-card ds-card ai-stats">
-        <h3 class="chart-title">AI 使用情况</h3>
+      <div class="chart-card ds-card ds-card--pad-lg ds-card--flat ai-stats">
+        <h3 class="h3 chart-title">AI 使用情况</h3>
         <div class="ai-stat-item">
           <p class="ai-stat-label">算法使用率</p>
           <div class="ai-gauge">
@@ -187,8 +187,8 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: $spacing-md;
-  margin-bottom: $spacing-md;
+  gap: $space-5;
+  margin-bottom: $space-5;
 
   @include respond-to(min-md) {
     grid-template-columns: repeat(2, 1fr);
@@ -203,11 +203,6 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
   display: flex;
   align-items: flex-start;
   gap: $space-4;
-  padding: $space-5;
-
-  @include respond-to(min-md) {
-    padding: $space-5;
-  }
 
   .stat-icon {
     width: 44px;
@@ -256,8 +251,8 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 .charts-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: $spacing-md;
-  margin-bottom: $spacing-md;
+  gap: $space-5;
+  margin-bottom: $space-5;
 
   @include respond-to(min-lg) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
@@ -275,19 +270,10 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 }
 
 .chart-card {
-  padding: 18px 20px;
   min-width: 0;
 
-  @include respond-to(min-md) {
-    padding: 20px 22px;
-  }
-
   .chart-title {
-    font-size: $font-size-md;
-    font-weight: $font-weight-semibold;
-    color: $text-title;
-    margin: 0 0 18px;
-    line-height: $line-height-tight;
+    margin: 0 0 $space-5;
   }
 }
 
@@ -295,7 +281,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
   position: relative;
   width: 140px;
   height: 140px;
-  margin: 0 auto 20px;
+  margin: 0 auto $space-5;
 
   .donut-svg {
     width: 100%;
@@ -327,22 +313,22 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 .chart-legend {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: $space-3;
 
   &.horizontal {
     flex-direction: row;
     justify-content: center;
-    gap: 24px;
-    margin-top: 12px;
-    font-size: 13px;
+    gap: $space-5;
+    margin-top: $space-3;
+    font-size: $font-size-sm;
     color: $text-regular;
   }
 
   .legend-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: $space-2;
+    font-size: $font-size-sm;
     color: $text-regular;
 
     .dot {
@@ -354,7 +340,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 
     .legend-val {
       margin-left: auto;
-      font-weight: 600;
+      font-weight: $font-weight-semibold;
       color: $text-primary;
     }
   }
@@ -373,7 +359,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
     display: flex;
     justify-content: space-between;
     padding: 0 20px;
-    font-size: 12px;
+    font-size: $font-size-xs;
     color: $text-secondary;
   }
 }
@@ -382,12 +368,12 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
   .bar-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
+    gap: $space-3;
+    margin-bottom: $space-4;
 
     .bar-label {
       width: 56px;
-      font-size: 13px;
+      font-size: $font-size-sm;
       color: $text-regular;
       flex-shrink: 0;
     }
@@ -396,21 +382,21 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
       flex: 1;
       height: 8px;
       background: $border-lighter;
-      border-radius: 4px;
+      border-radius: $radius-sm;
       overflow: hidden;
 
       .bar-fill {
         height: 100%;
         background: linear-gradient(90deg, #4d7cfe, #7a9dfe);
-        border-radius: 4px;
+        border-radius: $radius-sm;
         transition: width 0.5s;
       }
     }
 
     .bar-val {
       width: 28px;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
       color: $text-primary;
       text-align: right;
     }
@@ -420,37 +406,37 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 .duration-bars {
   display: flex;
   height: 12px;
-  border-radius: 6px;
+  border-radius: $radius-md;
   overflow: hidden;
-  margin-top: 16px;
+  margin-top: $space-4;
 }
 
 .duration-legend {
-  margin-top: 8px;
+  margin-top: $space-2;
 }
 
 .ai-stats {
   .ai-stat-item {
     text-align: center;
-    padding: 12px 0;
+    padding: $space-3 0;
 
     .ai-stat-label {
-      font-size: 13px;
+      font-size: $font-size-sm;
       color: $text-secondary;
-      margin: 0 0 8px;
+      margin: 0 0 $space-2;
     }
 
     .ai-stat-num {
-      font-size: 36px;
-      font-weight: 700;
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
       color: $primary-color;
       margin: 0;
 
       span {
-        font-size: 14px;
-        font-weight: 400;
+        font-size: $font-size-base;
+        font-weight: $font-weight-regular;
         color: $text-secondary;
-        margin-left: 4px;
+        margin-left: $space-1;
       }
     }
   }

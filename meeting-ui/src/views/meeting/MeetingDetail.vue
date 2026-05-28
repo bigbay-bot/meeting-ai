@@ -35,6 +35,13 @@ const meeting = ref({
 
 const activeTab = ref('summary')
 
+const detailTabs = [
+  { label: '会议摘要', name: 'summary' },
+  { label: '决策项', name: 'decisions' },
+  { label: '行动项', name: 'actions' },
+  { label: '关键讨论', name: 'keypoints' }
+]
+
 const getStatusType = (status: string) => {
   return status === 'completed' ? 'success' : 'warning'
 }
@@ -47,14 +54,14 @@ const getStatusLabel = (status: string) => {
 <template>
   <div class="meeting-detail page-container">
     <div class="page-header">
-      <el-button text class="back-btn" @click="$router.push('/meetings')">
-        <el-icon :size="18"><ArrowLeft /></el-icon>
+      <button type="button" class="ds-btn ds-btn--ghost ds-btn--sm" @click="$router.push('/meetings')">
+        <el-icon :size="16"><ArrowLeft /></el-icon>
         返回
-      </el-button>
+      </button>
       <h1 class="page-title">会议详情</h1>
     </div>
 
-    <div class="detail-card ds-card">
+    <div class="ds-card ds-card--pad-lg ds-card--flat">
       <div class="meeting-header">
         <h2 class="h2">{{ meeting.title }}</h2>
         <span class="ds-tag" :class="{ 'ds-tag--success': meeting.status === 'completed' }">
@@ -82,103 +89,82 @@ const getStatusLabel = (status: string) => {
         <div class="meta-item meta-item--wide">
           <span class="meta-label">参会人员</span>
           <div class="participants">
-            <span v-for="p in meeting.participants" :key="p" class="participant-tag">
-              {{ p }}
-            </span>
+            <span v-for="p in meeting.participants" :key="p" class="ds-tag">{{ p }}</span>
           </div>
         </div>
       </div>
 
-      <el-tabs v-model="activeTab" class="detail-tabs">
-        <el-tab-pane label="会议摘要" name="summary">
-          <p class="summary-text">{{ meeting.summary }}</p>
-        </el-tab-pane>
+      <div class="section-head">
+        <h3 class="section-head__title h3">会议内容</h3>
+        <nav class="tab-bar">
+          <button
+            v-for="tab in detailTabs"
+            :key="tab.name"
+            type="button"
+            class="tab-bar__btn"
+            :class="{ 'is-active': activeTab === tab.name }"
+            @click="activeTab = tab.name"
+          >
+            {{ tab.label }}
+          </button>
+        </nav>
+      </div>
 
-        <el-tab-pane label="决策项" name="decisions">
-          <div class="decision-list">
-            <div v-for="(decision, index) in meeting.decisions" :key="index" class="decision-item">
-              <span class="decision-index">{{ index + 1 }}</span>
-              <span class="decision-text">{{ decision }}</span>
+      <div v-if="activeTab === 'summary'" class="tab-content">
+        <p class="summary-text">{{ meeting.summary }}</p>
+      </div>
+
+      <div v-if="activeTab === 'decisions'" class="tab-content">
+        <div class="decision-list">
+          <div v-for="(decision, index) in meeting.decisions" :key="index" class="decision-item">
+            <span class="decision-index">{{ index + 1 }}</span>
+            <span class="decision-text">{{ decision }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="activeTab === 'actions'" class="tab-content">
+        <div class="action-list">
+          <div
+            v-for="item in meeting.actionItems"
+            :key="item.content"
+            class="action-item"
+            :class="{ 'action-item--done': item.status === 'completed' }"
+          >
+            <div class="action-main">
+              <el-icon :size="18" class="action-check">
+                <Check />
+              </el-icon>
+              <span class="action-content">{{ item.content }}</span>
+            </div>
+            <div class="action-meta">
+              <span class="action-owner">{{ item.owner }}</span>
+              <span class="action-deadline">{{ item.deadline }}</span>
+              <span class="ds-tag" :class="`ds-tag--${getStatusType(item.status)}`">
+                {{ getStatusLabel(item.status) }}
+              </span>
             </div>
           </div>
-        </el-tab-pane>
+        </div>
+      </div>
 
-        <el-tab-pane label="行动项" name="actions">
-          <div class="action-list">
-            <div
-              v-for="item in meeting.actionItems"
-              :key="item.content"
-              class="action-item"
-              :class="{ 'action-item--done': item.status === 'completed' }"
-            >
-              <div class="action-main">
-                <el-icon :size="18" class="action-check">
-                  <Check />
-                </el-icon>
-                <span class="action-content">{{ item.content }}</span>
-              </div>
-              <div class="action-meta">
-                <span class="action-owner">{{ item.owner }}</span>
-                <span class="action-deadline">{{ item.deadline }}</span>
-                <span class="ds-tag" :class="`ds-tag--${getStatusType(item.status)}`">
-                  {{ getStatusLabel(item.status) }}
-                </span>
-              </div>
-            </div>
+      <div v-if="activeTab === 'keypoints'" class="tab-content">
+        <div class="keypoint-list">
+          <div
+            v-for="(point, index) in meeting.keyPoints"
+            :key="index"
+            class="keypoint-item"
+          >
+            <span class="keypoint-dot" />
+            <span class="keypoint-text">{{ point }}</span>
           </div>
-        </el-tab-pane>
-
-        <el-tab-pane label="关键讨论" name="keypoints">
-          <div class="keypoint-list">
-            <div
-              v-for="(point, index) in meeting.keyPoints"
-              :key="index"
-              class="keypoint-item"
-            >
-              <span class="keypoint-dot" />
-              <span class="keypoint-text">{{ point }}</span>
-            </div>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.page-header {
-  display: flex;
-  align-items: center;
-  gap: $space-3;
-  margin-bottom: $space-5;
-
-  .back-btn {
-    padding: 0;
-    height: auto;
-    font-size: $font-size-base;
-    color: $text-secondary;
-
-    &:hover {
-      color: $primary-color;
-    }
-  }
-
-  .page-title {
-    font-size: $font-size-xl;
-    font-weight: $font-weight-bold;
-    color: $text-primary;
-    margin: 0;
-  }
-}
-
-.detail-card {
-  padding: $space-5;
-
-  @include respond-to(sm) {
-    padding: $space-4;
-  }
-}
-
 .meeting-header {
   display: flex;
   justify-content: space-between;
@@ -194,7 +180,7 @@ const getStatusLabel = (status: string) => {
   gap: $space-4;
   padding-bottom: $space-5;
   border-bottom: 1px solid $border-light;
-  margin-bottom: $space-5;
+  margin-bottom: 0;
 
   @include respond-to(md) {
     grid-template-columns: repeat(2, 1fr);
@@ -234,21 +220,8 @@ const getStatusLabel = (status: string) => {
   gap: $space-2;
 }
 
-.participant-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: $space-1 $space-3;
-  border-radius: $radius-md;
-  background: $primary-light;
-  color: $primary-color;
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-}
-
-.detail-tabs {
-  :deep(.el-tabs__header) {
-    margin-bottom: $space-4;
-  }
+.tab-content {
+  padding-top: $space-5;
 }
 
 .summary-text {
