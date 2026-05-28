@@ -3,17 +3,17 @@ import { ref } from 'vue'
 import { Calendar, Timer, User, Document } from '@element-plus/icons-vue'
 
 const statsOverview = ref([
-  { label: '会议总数', value: '24', unit: '场', change: '+20%', icon: Calendar, color: '#4D7CFE', bg: '#E8EFFF' },
-  { label: '会议总时长', value: '48.5', unit: '小时', change: '+12%', icon: Timer, color: '#F59E0B', bg: '#FEF3C7' },
-  { label: '参会人次', value: '156', unit: '人次', change: '+8%', icon: User, color: '#22C55E', bg: '#DCFCE7' },
-  { label: 'AI 生成纪要', value: '24', unit: '份', change: '+20%', icon: Document, color: '#8B5CF6', bg: '#EDE9FE' }
+  { label: '会议总数', value: '24', unit: '场', change: '+20%', icon: Calendar, theme: 'blue' },
+  { label: '会议总时长', value: '48.5', unit: '小时', change: '+12%', icon: Timer, theme: 'amber' },
+  { label: '参会人次', value: '156', unit: '人次', change: '+8%', icon: User, theme: 'green' },
+  { label: 'AI 生成纪要', value: '24', unit: '份', change: '+20%', icon: Document, theme: 'purple' }
 ])
 
 const meetingTypeData = ref([
-  { name: '需求评审', value: 35, color: '#4D7CFE' },
-  { name: '技术讨论', value: 28, color: '#F59E0B' },
-  { name: '总结汇报', value: 20, color: '#22C55E' },
-  { name: '敏捷开发', value: 17, color: '#8B5CF6' }
+  { name: '需求评审', value: 35, theme: 'blue' },
+  { name: '技术讨论', value: 28, theme: 'amber' },
+  { name: '总结汇报', value: 20, theme: 'green' },
+  { name: '敏捷开发', value: 17, theme: 'purple' }
 ])
 
 const deptData = ref([
@@ -25,10 +25,10 @@ const deptData = ref([
 ])
 
 const durationData = ref([
-  { name: '0-30分钟', value: 30, color: '#4D7CFE' },
-  { name: '30-60分钟', value: 40, color: '#22C55E' },
-  { name: '60-90分钟', value: 20, color: '#F59E0B' },
-  { name: '90分钟以上', value: 10, color: '#EF4444' }
+  { name: '0-30分钟', value: 30, theme: 'blue' },
+  { name: '30-60分钟', value: 40, theme: 'green' },
+  { name: '60-90分钟', value: 20, theme: 'amber' },
+  { name: '90分钟以上', value: 10, theme: 'red' }
 ])
 
 const trendMonths = ['1月', '2月', '3月', '4月', '5月', '6月']
@@ -45,7 +45,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
     <!-- 指标卡片 -->
     <div class="stats-grid">
       <div v-for="item in statsOverview" :key="item.label" class="stat-card ds-card ds-card--pad-lg ds-card--flat">
-        <div class="stat-icon" :style="{ background: item.bg, color: item.color }">
+        <div class="stat-icon" :class="`stat-icon--${item.theme}`">
           <el-icon :size="22"><component :is="item.icon" /></el-icon>
         </div>
         <div class="stat-body">
@@ -61,34 +61,40 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
     <!-- 图表行 1 -->
     <div class="charts-row">
       <div class="chart-card ds-card ds-card--pad-lg ds-card--flat">
-        <h3 class="h3 chart-title">会议类型分布</h3>
+        <div class="section-head">
+          <h3 class="section-head__title">会议类型分布</h3>
+        </div>
         <div class="donut-chart">
           <svg viewBox="0 0 120 120" class="donut-svg">
-            <circle cx="60" cy="60" r="45" fill="none" stroke="#E8EFFF" stroke-width="16" />
+            <circle cx="60" cy="60" r="45" fill="none" class="donut-track" stroke-width="16" />
             <circle
               cx="60" cy="60" r="45" fill="none"
-              stroke="#4D7CFE" stroke-width="16"
+              class="donut-segment donut-segment--blue"
+              stroke-width="16"
               stroke-dasharray="99 283"
               stroke-dashoffset="0"
               transform="rotate(-90 60 60)"
             />
             <circle
               cx="60" cy="60" r="45" fill="none"
-              stroke="#F59E0B" stroke-width="16"
+              class="donut-segment donut-segment--amber"
+              stroke-width="16"
               stroke-dasharray="79 283"
               stroke-dashoffset="-99"
               transform="rotate(-90 60 60)"
             />
             <circle
               cx="60" cy="60" r="45" fill="none"
-              stroke="#22C55E" stroke-width="16"
+              class="donut-segment donut-segment--green"
+              stroke-width="16"
               stroke-dasharray="57 283"
               stroke-dashoffset="-178"
               transform="rotate(-90 60 60)"
             />
             <circle
               cx="60" cy="60" r="45" fill="none"
-              stroke="#8B5CF6" stroke-width="16"
+              class="donut-segment donut-segment--purple"
+              stroke-width="16"
               stroke-dasharray="48 283"
               stroke-dashoffset="-235"
               transform="rotate(-90 60 60)"
@@ -101,7 +107,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
         </div>
         <div class="chart-legend">
           <div v-for="item in meetingTypeData" :key="item.name" class="legend-item">
-            <span class="dot" :style="{ background: item.color }" />
+            <span class="dot" :class="`dot--${item.theme}`" />
             <span>{{ item.name }}</span>
             <span class="legend-val">{{ item.value }}%</span>
           </div>
@@ -109,25 +115,42 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
       </div>
 
       <div class="chart-card ds-card ds-card--pad-lg ds-card--flat">
-        <h3 class="h3 chart-title">会议趋势</h3>
+        <div class="section-head">
+          <h3 class="section-head__title">会议趋势</h3>
+        </div>
         <div class="line-chart-area">
-          <svg viewBox="0 0 400 160" class="line-svg" preserveAspectRatio="none">
+          <svg viewBox="0 0 400 180" class="line-svg" preserveAspectRatio="none">
+            <!-- 水平网格线 -->
+            <line v-for="i in 4" :key="'g'+i" x1="0" :y1="i * 36" x2="400" :y2="i * 36"
+              stroke="#f3f4f6" stroke-width="1" />
+            <!-- 会议数折线 -->
             <polyline
-              :points="trendMeetings.map((v, i) => `${i * 80 + 40},${160 - v * 5}`).join(' ')"
-              fill="none" stroke="#4D7CFE" stroke-width="2.5"
+              :points="trendMeetings.map((v, i) => `${i * 80 + 40},${180 - v * 5}`).join(' ')"
+              fill="none" class="trend-line trend-line--meetings" stroke-width="2.5"
+              stroke-linejoin="round" stroke-linecap="round"
             />
+            <!-- 参会人次折线 -->
             <polyline
-              :points="trendParticipants.map((v, i) => `${i * 80 + 40},${160 - v * 1.2}`).join(' ')"
-              fill="none" stroke="#22C55E" stroke-width="2.5" stroke-dasharray="6 4"
+              :points="trendParticipants.map((v, i) => `${i * 80 + 40},${180 - v * 1.3}`).join(' ')"
+              fill="none" class="trend-line trend-line--participants" stroke-width="2.5"
+              stroke-dasharray="6 4" stroke-linejoin="round" stroke-linecap="round"
             />
+            <!-- 会议数数据点 -->
+            <circle v-for="(v, i) in trendMeetings" :key="'m'+i"
+              :cx="i * 80 + 40" :cy="180 - v * 5" r="4"
+              class="trend-dot trend-dot--meetings" />
+            <!-- 参会人次数据点 -->
+            <circle v-for="(v, i) in trendParticipants" :key="'p'+i"
+              :cx="i * 80 + 40" :cy="180 - v * 1.3" r="4"
+              class="trend-dot trend-dot--participants" />
           </svg>
           <div class="x-labels">
             <span v-for="m in trendMonths" :key="m">{{ m }}</span>
           </div>
         </div>
         <div class="chart-legend horizontal">
-          <span><span class="dot" style="background:#4D7CFE" /> 会议数</span>
-          <span><span class="dot" style="background:#22C55E" /> 参会人次</span>
+          <span class="legend-item"><span class="dot dot--blue" /> 会议数</span>
+          <span class="legend-item"><span class="dot dot--green" /> 参会人次</span>
         </div>
       </div>
     </div>
@@ -135,7 +158,9 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
     <!-- 图表行 2 -->
     <div class="charts-row three-col">
       <div class="chart-card ds-card ds-card--pad-lg ds-card--flat">
-        <h3 class="h3 chart-title">部门会议 TOP5</h3>
+        <div class="section-head">
+          <h3 class="section-head__title">部门会议 TOP5</h3>
+        </div>
         <div class="bar-chart">
           <div v-for="item in deptData" :key="item.name" class="bar-row">
             <span class="bar-label">{{ item.name }}</span>
@@ -148,10 +173,12 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
       </div>
 
       <div class="chart-card ds-card ds-card--pad-lg ds-card--flat">
-        <h3 class="h3 chart-title">会议时长分布</h3>
-        <div class="duration-legend">
+        <div class="section-head">
+          <h3 class="section-head__title">会议时长分布</h3>
+        </div>
+        <div class="chart-legend duration-legend">
           <div v-for="item in durationData" :key="item.name" class="legend-item">
-            <span class="dot" :style="{ background: item.color }" />
+            <span class="dot" :class="`dot--${item.theme}`" />
             <span>{{ item.name }}</span>
             <span class="legend-val">{{ item.value }}%</span>
           </div>
@@ -161,17 +188,20 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
             v-for="item in durationData"
             :key="item.name"
             class="duration-segment"
-            :style="{ width: item.value + '%', background: item.color }"
+            :class="`duration-segment--${item.theme}`"
+            :style="{ width: item.value + '%' }"
           />
         </div>
       </div>
 
       <div class="chart-card ds-card ds-card--pad-lg ds-card--flat ai-stats">
-        <h3 class="h3 chart-title">AI 使用情况</h3>
+        <div class="section-head">
+          <h3 class="section-head__title">AI 使用情况</h3>
+        </div>
         <div class="ai-stat-item">
           <p class="ai-stat-label">算法使用率</p>
           <div class="ai-gauge">
-            <el-progress type="dashboard" :percentage="92" :width="100" color="#4D7CFE" />
+            <el-progress type="dashboard" :percentage="92" :width="100" :color="$primary-color" />
           </div>
         </div>
         <div class="ai-stat-item">
@@ -184,6 +214,19 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 </template>
 
 <style scoped lang="scss">
+// ---- 颜色主题映射 ----
+$theme-blue: $primary-color;
+$theme-blue-bg: #e8efff;
+$theme-amber: $warning-color;
+$theme-amber-bg: #fef3c7;
+$theme-green: $success-color;
+$theme-green-bg: #dcfce7;
+$theme-purple: #8b5cf6;
+$theme-purple-bg: #ede9fe;
+$theme-red: $danger-color;
+$theme-red-bg: #fef2f2;
+
+// ---- 指标卡片 ----
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -212,6 +255,11 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+
+    &--blue   { background: $theme-blue-bg;   color: $theme-blue; }
+    &--amber  { background: $theme-amber-bg;  color: $theme-amber; }
+    &--green  { background: $theme-green-bg;  color: $theme-green; }
+    &--purple { background: $theme-purple-bg; color: $theme-purple; }
   }
 
   .stat-label {
@@ -226,14 +274,14 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
     font-weight: $font-weight-semibold;
     font-family: $font-family-num;
     color: $text-title;
-    margin: 0 0 4px;
+    margin: 0 0 $space-1;
     line-height: $line-height-tight;
 
     .unit {
       font-size: $font-size-sm;
       font-weight: $font-weight-regular;
       color: $text-secondary;
-      margin-left: 2px;
+      margin-left: $space-1;
     }
   }
 
@@ -248,6 +296,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
   }
 }
 
+// ---- 图表行 ----
 .charts-row {
   display: grid;
   grid-template-columns: 1fr;
@@ -271,12 +320,9 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
 
 .chart-card {
   min-width: 0;
-
-  .chart-title {
-    margin: 0 0 $space-5;
-  }
 }
 
+// ---- 甜甜圈图 ----
 .donut-chart {
   position: relative;
   width: 140px;
@@ -286,6 +332,17 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
   .donut-svg {
     width: 100%;
     height: 100%;
+  }
+
+  .donut-track {
+    stroke: $border-light;
+  }
+
+  .donut-segment {
+    &--blue   { stroke: $theme-blue; }
+    &--amber  { stroke: $theme-amber; }
+    &--green  { stroke: $theme-green; }
+    &--purple { stroke: $theme-purple; }
   }
 
   .donut-center {
@@ -301,6 +358,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
       font-weight: $font-weight-semibold;
       font-family: $font-family-num;
       color: $text-title;
+      line-height: $line-height-tight;
     }
 
     .donut-label {
@@ -310,6 +368,7 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
   }
 }
 
+// ---- 图例 ----
 .chart-legend {
   display: flex;
   flex-direction: column;
@@ -320,8 +379,6 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
     justify-content: center;
     gap: $space-5;
     margin-top: $space-3;
-    font-size: $font-size-sm;
-    color: $text-regular;
   }
 
   .legend-item {
@@ -330,46 +387,78 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
     gap: $space-2;
     font-size: $font-size-sm;
     color: $text-regular;
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .legend-val {
-      margin-left: auto;
-      font-weight: $font-weight-semibold;
-      color: $text-primary;
-    }
   }
 }
 
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &--blue   { background: $theme-blue; }
+  &--amber  { background: $theme-amber; }
+  &--green  { background: $theme-green; }
+  &--purple { background: $theme-purple; }
+  &--red    { background: $theme-red; }
+}
+
+.legend-val {
+  margin-left: auto;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  font-family: $font-family-num;
+}
+
+// ---- 趋势折线图 ----
 .line-chart-area {
-  height: 180px;
+  height: 200px;
   position: relative;
 
   .line-svg {
     width: 100%;
-    height: calc(100% - 24px);
+    height: calc(100% - 28px);
+  }
+
+  .trend-line {
+    &--meetings    { stroke: $theme-blue; }
+    &--participants { stroke: $theme-green; }
+  }
+
+  .trend-dot {
+    stroke-width: 2;
+
+    &--meetings {
+      fill: $bg-white;
+      stroke: $theme-blue;
+    }
+
+    &--participants {
+      fill: $bg-white;
+      stroke: $theme-green;
+    }
   }
 
   .x-labels {
     display: flex;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 $space-5;
     font-size: $font-size-xs;
     color: $text-secondary;
   }
 }
 
+// ---- 柱状图 ----
 .bar-chart {
   .bar-row {
     display: flex;
     align-items: center;
     gap: $space-3;
     margin-bottom: $space-4;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     .bar-label {
       width: 56px;
@@ -381,26 +470,32 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
     .bar-track {
       flex: 1;
       height: 8px;
-      background: $border-lighter;
+      background: $border-light;
       border-radius: $radius-sm;
       overflow: hidden;
 
       .bar-fill {
         height: 100%;
-        background: linear-gradient(90deg, #4d7cfe, #7a9dfe);
+        background: $primary-color;
         border-radius: $radius-sm;
-        transition: width 0.5s;
+        transition: width 0.5s ease-out;
       }
     }
 
     .bar-val {
-      width: 28px;
+      min-width: 28px;
       font-size: $font-size-sm;
       font-weight: $font-weight-semibold;
+      font-family: $font-family-num;
       color: $text-primary;
       text-align: right;
     }
   }
+}
+
+// ---- 时长分布 ----
+.duration-legend {
+  margin-bottom: $space-4;
 }
 
 .duration-bars {
@@ -408,27 +503,35 @@ const trendParticipants = [45, 52, 68, 80, 95, 110]
   height: 12px;
   border-radius: $radius-md;
   overflow: hidden;
-  margin-top: $space-4;
+
+  .duration-segment {
+    &--blue   { background: $theme-blue; }
+    &--amber  { background: $theme-amber; }
+    &--green  { background: $theme-green; }
+    &--red    { background: $theme-red; }
+  }
 }
 
-.duration-legend {
-  margin-top: $space-2;
-}
-
+// ---- AI 统计 ----
 .ai-stats {
   .ai-stat-item {
     text-align: center;
-    padding: $space-3 0;
+    padding: $space-4 0;
+
+    &:first-child {
+      padding-top: 0;
+    }
 
     .ai-stat-label {
       font-size: $font-size-sm;
       color: $text-secondary;
-      margin: 0 0 $space-2;
+      margin: 0 0 $space-3;
     }
 
     .ai-stat-num {
       font-size: $font-size-2xl;
       font-weight: $font-weight-bold;
+      font-family: $font-family-num;
       color: $primary-color;
       margin: 0;
 
