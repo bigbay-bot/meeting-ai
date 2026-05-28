@@ -51,3 +51,6 @@ meeting-ai
 - **间距**: 必须使用 `$space-*` 变量，禁止硬编码像素值
 - **字号/圆角/颜色**: 必须使用 variables.scss 中定义的变量
 - **页面容器**: `page-container` class + `max-width: 90%`
+
+## 提交规范补充
+- **禁止**在 commit message 中添加 `Co-Authored-By` 或任何包含 `claude` / `bigbay-bot` 的署名行
