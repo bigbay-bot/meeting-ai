@@ -212,13 +212,258 @@
   ```
 - 左侧显示总数文字（`$font-size-sm` + `$text-secondary`），右侧放分页器
 
-### 5.7 表格
+### 5.7 表格（数据列表）
 
-- 外层 `ds-card ds-card--flat`，`padding: 0`，`overflow: hidden`
-- 表格最小宽度 `min-width: 720px`，外层加 `.table-scroll-wrap` 横向滚动
-- 表头背景: `$bg-base`
-- 表格边框: `$border-lighter`
-- 行内名称: `$font-weight-medium` + `$text-title`
+**禁止使用 el-table**，统一使用自定义列表行，视觉与首页一致，间距呼吸感更好。
+
+#### 模板结构
+
+```html
+<div class="ds-card ds-card--pad-lg ds-card--flat">
+  <!-- 表头 -->
+  <div class="list-header">
+    <span class="col-title">名称</span>
+    <span class="col-type">类型</span>
+    <span class="col-time">时间</span>
+    <span class="col-status">状态</span>
+    <span class="col-action">操作</span>
+  </div>
+
+  <!-- 列表行 -->
+  <ul class="meeting-rows">
+    <li v-for="item in list" :key="item.id" class="meeting-row" @click="handleView(item.id)">
+      <div class="col-title">
+        <div class="row-icon"><el-icon :size="20"><Document /></el-icon></div>
+        <span class="row-name">{{ item.title }}</span>
+      </div>
+      <div class="col-type"><span class="ds-tag ds-tag--neutral">{{ item.type }}</span></div>
+      <div class="col-time">{{ item.time }}</div>
+      <div class="col-status"><span class="ds-tag ds-tag--success">{{ item.status }}</span></div>
+      <div class="col-action" @click.stop>
+        <button class="ds-btn ds-btn--ghost ds-btn--sm">查看</button>
+        <button class="star-btn" :class="{ 'is-active': item.starred }">★</button>
+      </div>
+    </li>
+  </ul>
+
+  <!-- 分页 -->
+  <div class="pagination">
+    <span class="total-text">共 {{ total }} 条</span>
+    <el-pagination background layout="prev, pager, next, sizes" :total="total"
+      prev-text="上一页" next-text="下一页" />
+  </div>
+</div>
+```
+
+#### 列宽定义
+
+用 CSS Grid 定义列宽，表头与行必须使用相同的 `grid-template-columns`：
+
+```scss
+// 根据实际业务调整宽度，名称列用 minmax(0, 1fr) 自适应
+grid-template-columns: minmax(0, 1fr) 100px 160px 90px 140px;
+gap: $space-4;
+```
+
+#### 表头样式
+
+```scss
+.list-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px 160px 90px 140px;  // 与行一致
+  gap: $space-4;
+  align-items: center;
+  padding: 0 $space-5;
+  height: 44px;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  border-bottom: 1px solid $border-color;
+
+  @include respond-to(md) {
+    display: none;  // 移动端隐藏表头
+  }
+}
+```
+
+#### 列表行样式
+
+```scss
+.meeting-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.meeting-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px 160px 90px 140px;  // 与表头一致
+  gap: $space-4;
+  align-items: center;
+  padding: $space-4 $space-5;
+  border-bottom: 1px solid $border-light;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:last-child { border-bottom: none; }
+
+  &:hover {
+    background: $bg-hover;
+    border-radius: $radius-md;
+    margin: 0 (-$space-4);                      // 向外扩展实现圆角效果
+    padding-left: $space-5 + $space-4;
+    padding-right: $space-5 + $space-4;
+  }
+
+  @include respond-to(md) {
+    grid-template-columns: 1fr;                 // 移动端单列堆叠
+    gap: $space-2;
+    padding: $space-4;
+
+    &:hover { margin: 0; padding: $space-4; }   // 移动端无外扩
+  }
+}
+```
+
+#### 名称列（左侧图标+文字）
+
+```scss
+.col-title {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  min-width: 0;
+
+  .row-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: $radius-md;
+    background: $primary-light;
+    color: $primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .row-name {
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    color: $text-title;
+    line-height: $line-height-tight;
+    @include text-ellipsis;
+  }
+}
+```
+
+#### 时间列
+
+```scss
+.col-time {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  white-space: nowrap;
+}
+```
+
+#### 移动端标签前缀
+
+移动端单列时，用 `::before` 显示列名前缀：
+
+```scss
+.col-type  { @include respond-to(md) { &::before { content: '类型：'; } } }
+.col-time  { @include respond-to(md) { &::before { content: '时间：'; } } }
+.col-status { @include respond-to(md) { &::before { content: '状态：'; } } }
+```
+
+#### 收藏/操作按钮
+
+```scss
+.star-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: $text-disabled;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-md;
+  transition: $transition-base;
+
+  &.is-active { color: $warning-color; }
+  &:hover { background: $bg-hover; }
+}
+```
+
+#### 头像组
+
+```scss
+.avatar-group {
+  display: flex;
+  align-items: center;
+
+  .avatar-item {
+    margin-left: -$space-2;
+    border: 2px solid $bg-white;
+    font-size: $font-size-xs;
+    background: $primary-color;
+    color: $bg-white;
+    &:first-child { margin-left: 0; }
+  }
+
+  .avatar-more {
+    margin-left: $space-1;
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    font-weight: $font-weight-medium;
+  }
+}
+```
+
+#### 分页
+
+```scss
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $space-3;
+  padding: $space-4 $space-5 0;
+  border-top: 1px solid $border-light;
+  margin-top: $space-3;
+
+  .total-text {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+}
+```
+
+- 分页器必须配置中文: `prev-text="上一页"` `next-text="下一页"`
+- Element Plus 全局已配置中文 locale（`main.ts`）
+
+#### 筛选栏
+
+```scss
+.filter-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-3;
+  margin-bottom: $space-5;
+
+  @include respond-to(min-md) {
+    grid-template-columns: 1fr repeat(3, minmax(120px, 160px));
+    align-items: center;
+  }
+}
+```
+
+- 搜索框: `ds-input-wrap` > `ds-input`
+- 下拉筛选: `el-select`
 
 ### 5.8 输入框/搜索
 
@@ -284,6 +529,7 @@
 | 硬编码 `border-radius: 8px` | `$radius-md` |
 | 硬编码 `color: #6b7280` | `$text-secondary` |
 | `el-tabs` | `section-head` + `tab-bar` |
+| `el-table` | 自定义列表行（list-header + meeting-rows） |
 | `el-tag` | `ds-tag` |
 | `el-button` 作为主按钮 | `ds-btn` |
 | `ds-card` 不加 `--flat` | `ds-card ds-card--flat` |

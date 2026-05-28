@@ -47,6 +47,7 @@ meeting-ai
 - **按钮**: 主按钮用 `ds-btn ds-btn--primary`，禁止 `el-button` 作为主按钮
 - **标签**: 用 `ds-tag` 及其变体，禁止 `el-tag`
 - **标签切换**: 用 `section-head` + `tab-bar`，禁止 `el-tabs`
+- **数据列表**: 用自定义列表行（list-header + meeting-rows），禁止 `el-table`
 - **间距**: 必须使用 `$space-*` 变量，禁止硬编码像素值
 - **字号/圆角/颜色**: 必须使用 variables.scss 中定义的变量
 - **页面容器**: `page-container` class + `max-width: 90%`
