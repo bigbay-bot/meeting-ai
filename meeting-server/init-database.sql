@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `meeting` (
   `progress_percent` int DEFAULT 0 COMMENT '生成进度百分比',
   `start_time` datetime NOT NULL COMMENT '开始时间',
   `end_time` datetime NOT NULL COMMENT '结束时间',
-  `duration` varchar(20) DEFAULT NULL COMMENT '持续时间描述',
+  `duration` int DEFAULT NULL COMMENT '持续时长(分钟)',
   `location` varchar(200) DEFAULT NULL COMMENT '地点',
   `description` text COMMENT '会议描述',
   `tags` json DEFAULT NULL COMMENT '标签数组',

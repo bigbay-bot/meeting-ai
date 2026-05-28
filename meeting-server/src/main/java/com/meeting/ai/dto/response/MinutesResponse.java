@@ -1,5 +1,6 @@
 package com.meeting.ai.dto.response;
 
+import com.meeting.ai.vo.ActionItemVO;
 import lombok.Data;
 
 import java.util.List;

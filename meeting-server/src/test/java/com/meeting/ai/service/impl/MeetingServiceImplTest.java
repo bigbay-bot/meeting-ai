@@ -45,7 +45,7 @@ class MeetingServiceImplTest {
         meeting.setStatus("completed");
         meeting.setStartTime(LocalDateTime.of(2026, 5, 15, 14, 0));
         meeting.setEndTime(LocalDateTime.of(2026, 5, 15, 16, 0));
-        meeting.setDuration("2小时");
+        meeting.setDuration(120);
         meeting.setLocation("线上会议");
 
         Page<Meeting> page = new Page<>(1, 10, 1);
@@ -105,7 +105,7 @@ class MeetingServiceImplTest {
         meeting.setStatus("completed");
         meeting.setStartTime(LocalDateTime.of(2026, 5, 14, 10, 0));
         meeting.setEndTime(LocalDateTime.of(2026, 5, 14, 11, 30));
-        meeting.setDuration("1.5小时");
+        meeting.setDuration(90);
 
         Page<Meeting> page = new Page<>(1, 10, 1);
         page.setRecords(List.of(meeting));

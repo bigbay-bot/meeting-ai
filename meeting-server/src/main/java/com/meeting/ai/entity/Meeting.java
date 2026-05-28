@@ -26,7 +26,7 @@ public class Meeting {
 
     private LocalDateTime endTime;
 
-    private String duration;
+    private Integer duration;
 
     private String location;
 

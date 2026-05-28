@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,8 +93,11 @@ public class MeetingServiceImpl implements MeetingService {
         if (meeting == null) {
             return;
         }
-        BeanUtils.copyProperties(request, meeting);
-        meeting.setId(id);
+        meeting.setTitle(request.getTitle());
+        meeting.setType(request.getType());
+        meeting.setLocation(request.getLocation());
+        meeting.setDescription(request.getDescription());
+        meeting.setDuration(request.getDuration());
         if (request.getTime() != null) {
             meeting.setStartTime(request.getTime());
             if (request.getDuration() != null) {
@@ -115,11 +119,11 @@ public class MeetingServiceImpl implements MeetingService {
 
         List<Long> organizerIds = meetings.stream()
                 .map(Meeting::getOrganizerId)
-                .filter(orgId -> orgId != null)
+                .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
 
-        Map<Long, String> organizerMap = Collections.emptyMap();
+        final Map<Long, String> organizerMap;
         if (!organizerIds.isEmpty()) {
             List<User> users = userMapper.selectBatchIds(organizerIds);
             organizerMap = users.stream()
@@ -128,6 +132,8 @@ public class MeetingServiceImpl implements MeetingService {
                             u -> u.getRealName() != null ? u.getRealName() : u.getUsername(),
                             (a, b) -> a
                     ));
+        } else {
+            organizerMap = Collections.emptyMap();
         }
 
         return meetings.stream().map(meeting -> {

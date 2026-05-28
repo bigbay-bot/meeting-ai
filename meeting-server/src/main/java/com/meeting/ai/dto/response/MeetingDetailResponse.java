@@ -10,7 +10,7 @@ public class MeetingDetailResponse {
     private String title;
     private String organizer;
     private String time;
-    private String duration;
+    private Integer duration;
     private String location;
     private List<String> participants;
     private String status;
